@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Button> Hello </Button>
+        <Button autoFocus> Hello </Button>
         <Button
           disabled
         >
@@ -28,6 +28,7 @@ function App() {
           btnType={ButtonType.Link}
           size={ButtonSize.Large}
           href='https://www.google.com.au'
+          target='_blank'
         >
           Google 
         </Button>

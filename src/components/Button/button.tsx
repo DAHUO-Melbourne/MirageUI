@@ -23,15 +23,25 @@ interface BaseButtonProps {
   href?: string;
 }
 
-const Button: React.FunctionComponent<BaseButtonProps> = ({
+type NativeButtonProps = BaseButtonProps & React.ButtonHTMLAttributes<HTMLElement>;
+// 拿到全部的button属性，使用联合类型&将BaseButtonProps和原生属性联合到一起形成完整的属性
+
+type AnchorButtonProps = BaseButtonProps & React.AnchorHTMLAttributes<HTMLElement>;
+
+export type ButtonProps = Partial<NativeButtonProps & AnchorButtonProps>;
+// 因为我们的组件里包含了button的属性，也包含了anchor的属性。所以当我们要做一个button的时候，很多anchor的属性我们就没法传入。这个时候就会报错。
+// 解决的办法是： 给所有的属性设置成可选属性，也就是partial
+
+const Button: React.FunctionComponent<ButtonProps> = ({
   className,
   disabled,
   size,
   btnType,
   children,
   href,
+  ...rest
 }) => {
-  const classes = classNames('btn', {
+  const classes = classNames('btn', className, {
     [`btn-${btnType}`]: btnType,
     [`btn-${size}`]: size,
     'disabled': btnType === ButtonType.Link && disabled
@@ -43,6 +53,7 @@ const Button: React.FunctionComponent<BaseButtonProps> = ({
     <a
       href={href}
       className={classes}
+      {...rest}
     >
       {children}
     </a>
@@ -52,6 +63,7 @@ const Button: React.FunctionComponent<BaseButtonProps> = ({
       <button
         className={classes}
         disabled={disabled}
+        {...rest}
       >
         {children}
       </button>
