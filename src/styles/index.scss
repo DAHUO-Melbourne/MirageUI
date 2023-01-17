@@ -3,3 +3,10 @@
 
 // layout
 @import 'reboot';
+
+// button
+@import '../components/Button/styles';
+
+@import 'mixin';
+
+// 所有的以下划线_开头的scss文件都必须要引入到index里，因为他们只是模块化scss文件，不能直接拿来用
