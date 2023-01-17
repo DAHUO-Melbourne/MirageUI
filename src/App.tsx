@@ -6,12 +6,30 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Button disabled> Hello </Button>
+        <Button> Hello </Button>
+        <Button
+          disabled
+        >
+          Disabled Button 
+        </Button>
         <Button
           btnType={ButtonType.Primary}
           size={ButtonSize.Large}
         >
-          Hello 
+          Large Primary 
+        </Button>
+        <Button
+          btnType={ButtonType.Danger}
+          size={ButtonSize.Small}
+        >
+          Small Danger 
+        </Button>
+        <Button
+          btnType={ButtonType.Link}
+          size={ButtonSize.Large}
+          href='https://www.google.com.au'
+        >
+          Google 
         </Button>
         <Button
           btnType={ButtonType.Link}
@@ -19,7 +37,7 @@ function App() {
           href='https://www.google.com.au'
           disabled
         >
-          Google 
+          Disabled Google 
         </Button>
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
