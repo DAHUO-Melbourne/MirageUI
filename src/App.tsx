@@ -57,3 +57,9 @@ function App() {
 }
 
 export default App;
+
+
+// 测试：什么样的文件会被认为是测试文件：
+// 1. __tests__文件夹中所有的.js/.ts文件
+// 2. 名字叫.test.js的文件
+// 3. 名字叫.spec.js的文件
