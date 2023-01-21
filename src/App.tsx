@@ -1,11 +1,24 @@
 import React from 'react';
 import './App.css';
 import Button, {ButtonType, ButtonSize} from './components/Button/button';
+import Menu from './components/Menu/menu';
+import MenuItem from './components/Menu/menuItem';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <Menu defaultIndex={0}>
+          <MenuItem>
+            cool link 1
+          </MenuItem>
+          <MenuItem>
+            cool link 2
+          </MenuItem>
+          <MenuItem>
+            cool link 3
+          </MenuItem>
+        </Menu>
         <Button autoFocus> Hello </Button>
         <Button
           disabled
