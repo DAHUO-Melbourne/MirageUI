@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import React, {useContext} from 'react'
 import {MenuContext} from './menu';
 
-interface MenuItemProps {
-  index: number;
+export interface MenuItemProps {
+  index?: number;
   className?: string;
   disabled?: boolean;
   style?: React.CSSProperties;
@@ -25,13 +25,16 @@ const MenuItem = ({
   });
 
   const handleClick = () => {
-    context.onSelect && !disabled && context.onSelect(index);
+    context.onSelect && !disabled && index && context.onSelect(index);
   }
 
   return (
     <li className={classes} style={style} onClick={handleClick}>{children}</li>
   )
 }
+
+MenuItem.displayName = 'MenuItem';
+// displayName是一个React节点的属性。用于调试用。
 
 MenuItem.defaultProps = {
   disabled: false,
