@@ -18,7 +18,8 @@ export interface MenuProps {
 
 interface IMenuContext {
   index: number;
-  onSelect?: onSelectCallback
+  onSelect?: onSelectCallback;
+  mode?: MenuMode;
 }
 
 export const MenuContext = createContext<IMenuContext>({index: 0});
@@ -46,6 +47,7 @@ const Menu: React.FC<MenuProps> = ({
   const passedContext: IMenuContext = {
     index: currentActive ?? 0,
     onSelect: handleClick,
+    mode: mode,
   }
   // 这才是他value的值
 
