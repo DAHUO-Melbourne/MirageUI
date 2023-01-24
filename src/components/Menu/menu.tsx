@@ -5,24 +5,26 @@ import MenuItem, {MenuItemProps} from './menuItem';
 type MenuMode = 'horizontal' | 'vertical';
 // 字符自变量可以代替枚举类型，写起来更方便。
 
-type onSelectCallback = (selectedIndex: number) => void;
+type onSelectCallback = (selectedIndex: string) => void;
 
 export interface MenuProps {
-  defaultIndex?: number;
+  defaultIndex?: string;
   className?: string;
   mode?: MenuMode;
   style?: React.CSSProperties;
   onSelect?: onSelectCallback;
   children?: React.ReactNode;
+  defaultOpenSubmenus?: string[];
 }
 
 interface IMenuContext {
-  index: number;
+  index: string;
   onSelect?: onSelectCallback;
   mode?: MenuMode;
+  defaultOpenSubmenus?: string[];
 }
 
-export const MenuContext = createContext<IMenuContext>({index: 0});
+export const MenuContext = createContext<IMenuContext>({index: '0'});
 // 因为onSelect函数需要传递给下面的子组件，但是子组件叫children，所以无法接收。
 // 这种情况下就应该使用createContext来传递参数
 // 这里是创建了一个context，并赋初值：{index: 0}
@@ -36,18 +38,20 @@ const Menu: React.FC<MenuProps> = ({
   style,
   onSelect,
   children,
+  defaultOpenSubmenus,
 }: MenuProps) => {
   const [currentActive, setCurrentActive] = useState(defaultIndex);
 
-  const handleClick = (index: number) => {
+  const handleClick = (index: string) => {
     setCurrentActive(index);
     onSelect && onSelect(index);
   }
 
   const passedContext: IMenuContext = {
-    index: currentActive ?? 0,
+    index: currentActive ?? '0',
     onSelect: handleClick,
-    mode: mode,
+    mode,
+    defaultOpenSubmenus,
   }
   // 这才是他value的值
 
@@ -63,7 +67,7 @@ const Menu: React.FC<MenuProps> = ({
       const {displayName} = childElement.type;
       if(displayName === 'MenuItem' || displayName === 'SubMenu') {
         return React.cloneElement(childElement, {
-          index
+          index: index.toString(),
         });
         // 为每一项，自动添加index，用到的方法就是React.cloneElement
         // 第一个参数是想要克隆的元素，第二个参数是想要添加的属性
@@ -88,8 +92,9 @@ const Menu: React.FC<MenuProps> = ({
 }
 
 Menu.defaultProps = {
-  defaultIndex: 0,
+  defaultIndex: '0',
   mode: 'horizontal',
+  defaultOpenSubmenus: [],
 }
 
 export default Menu;

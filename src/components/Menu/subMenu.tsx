@@ -4,7 +4,7 @@ import { MenuContext } from './menu';
 import {MenuItemProps} from './menuItem';
 
 export interface SubMenuProps { 
-  index?: number;
+  index?: string;
   title: string;
   className?: string;
   children: React.ReactNode;
@@ -16,8 +16,10 @@ const SubMenu: React.FC<SubMenuProps> = ({
   className,
   children,
 }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
   const context = useContext(MenuContext);
+  const openedSubMenus = context.defaultOpenSubmenus as Array<string>;
+  const isOpened = (index && context.mode === 'vertical') ? openedSubMenus.includes(index) : false;
+  const [menuOpen, setMenuOpen] = useState(isOpened);
   const classes = classNames('menu-item submenu-item', className, {
     'is-active': context.index === index,
   });
@@ -52,13 +54,13 @@ const SubMenu: React.FC<SubMenuProps> = ({
   })
 
   const renderChildren = () => {
-    const childrenComponent =  React.Children.map(children, (child, index) => {
+    const childrenComponent =  React.Children.map(children, (child, i) => {
       const childElement = child as React.FunctionComponentElement<MenuItemProps>;
       // 进行类选断言以拿到type属性
       const {displayName} = childElement.type;
       if(displayName === 'MenuItem') {
         return React.cloneElement(childElement, {
-          index
+          index: `${index}-${i}`
         });
         // 为每一项，自动添加index，用到的方法就是React.cloneElement
         // 第一个参数是想要克隆的元素，第二个参数是想要添加的属性
