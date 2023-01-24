@@ -2,21 +2,30 @@ import React from 'react';
 import Button, {ButtonType, ButtonSize} from './components/Button/button';
 import Menu from './components/Menu/menu';
 import MenuItem from './components/Menu/menuItem';
+import SubMenu from './components/Menu/subMenu';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <Menu defaultIndex={0} onSelect={(index) => alert(index)} mode='vertical'>
-          <MenuItem index={0}>
+          <MenuItem>
             cool link 1
           </MenuItem>
-          <MenuItem index={1} disabled>
+          <MenuItem disabled>
             cool link 2
           </MenuItem>
-          <MenuItem index={2}>
+          <MenuItem>
             cool link 3
           </MenuItem>
+          <SubMenu title='dropdown'>
+            <MenuItem disabled>
+              cool link 2
+            </MenuItem>
+            <MenuItem>
+              cool link 3
+          </MenuItem>
+          </SubMenu>
         </Menu>
         <Button autoFocus> Hello </Button>
         <Button

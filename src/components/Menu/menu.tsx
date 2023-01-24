@@ -50,7 +50,8 @@ const Menu: React.FC<MenuProps> = ({
   // 这才是他value的值
 
   const classes = classNames('mirage-menu', className, {
-    'menu-vertical': mode === 'vertical'
+    'menu-vertical': mode === 'vertical',
+    'menu-horizontal': mode !== 'vertical',
   })
 
   const renderChildren = () => {
@@ -58,7 +59,7 @@ const Menu: React.FC<MenuProps> = ({
       const childElement = child as React.FunctionComponentElement<MenuItemProps>;
       // 进行类选断言以拿到type属性
       const {displayName} = childElement.type;
-      if(displayName === 'MenuItem') {
+      if(displayName === 'MenuItem' || displayName === 'SubMenu') {
         return React.cloneElement(childElement, {
           index
         });
