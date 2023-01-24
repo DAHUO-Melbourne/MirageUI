@@ -6,7 +6,7 @@ type MenuMode = 'horizontal' | 'vertical';
 
 type onSelectCallback = (selectedIndex: number) => void;
 
-interface MenuProps {
+export interface MenuProps {
   defaultIndex?: number;
   className?: string;
   mode?: MenuMode;
@@ -52,7 +52,7 @@ const Menu: React.FC<MenuProps> = ({
     'menu-vertical': mode === 'vertical'
   })
   return (
-    <ul className={classes} style={style}>
+    <ul className={classes} style={style} data-testid='test-menu'>
       <MenuContext.Provider value={passedContext}>
         {children}
       </MenuContext.Provider>
