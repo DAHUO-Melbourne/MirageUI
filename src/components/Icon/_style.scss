@@ -1,0 +1,11 @@
+@each $key, $value in $theme-colors {
+  .icon-#{$key} {
+    color: $value
+  }
+}
+
+// @each in 这是一个scss给出的for loop解决方案，语法就是首先你的数据结构(theme-color)需要是个object，但是是拿圆括号()括起来的
+// 第一位是key，也就是primary/secondary等
+// 第二位是value，他们对应的值
+// 至于是不是在each后面一定要叫key && value，其实这是无所谓的，只是不同的位置对应不同的object位
+// 至于里面的语法，就是给所有的key/value pair做一些操作了，这样就不用我们一个个去写了。

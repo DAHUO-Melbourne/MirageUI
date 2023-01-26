@@ -15,7 +15,7 @@ const Icon: React.FC<IconProps> = ({
   ...rest
 }: IconProps) => {
   const classes = classNames('mirage-icon', className, {
-    [`icon=${theme}`]: theme
+    [`icon-${theme}`]: theme
   });
 
   return (
