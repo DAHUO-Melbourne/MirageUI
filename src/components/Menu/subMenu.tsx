@@ -2,6 +2,7 @@ import React, {useContext, useState, FunctionComponentElement} from 'react';
 import classNames from 'classnames';
 import { MenuContext } from './menu';
 import {MenuItemProps} from './menuItem';
+import Icon from '../Icon/Icon';
 
 export interface SubMenuProps { 
   index?: string;
@@ -50,7 +51,9 @@ const SubMenu: React.FC<SubMenuProps> = ({
   // 返回一个object用以传入不同的属性：事件处理函数
 
   const subMenuClasses = classNames('mirage-submenu', {
-    'menu-opened': menuOpen
+    'menu-opened': menuOpen,
+    'is-opened': menuOpen,
+    'is-vertical': context.mode === 'vertical',
   })
 
   const renderChildren = () => {
@@ -79,6 +82,7 @@ const SubMenu: React.FC<SubMenuProps> = ({
     <li key={index} className={classes} {...hoverEvents}>
       <div className='submenu-title' {...clickEvents}>
         {title}
+        <Icon icon='angle-down' className='arrow-icon' />
       </div>
       {renderChildren()}
     </li>

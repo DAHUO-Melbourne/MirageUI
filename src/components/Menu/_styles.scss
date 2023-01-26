@@ -31,11 +31,15 @@
     }
     .arrow-icon {
       transition: transform .25s ease-in-out;
+      // transition是添加渐进式动画的方法，让动画有过程。比如说使旋转180°有个旋转过程，旋转到30/60/90/120/150，有这个中间过程。第一个参数是动画名称
+      // 第二个参数是动画持续时间
+      // 第三个参数是时间线范围
       margin-left: 3px;
     }
     &:hover {
       .arrow-icon {
         transform: rotate(180deg);
+        // transform是具体的动画内容，比如说缩放位移旋转都要用到transform
       }
     }
   }
