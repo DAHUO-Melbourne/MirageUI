@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { MenuContext } from './menu';
 import {MenuItemProps} from './menuItem';
 import Icon from '../Icon/Icon';
+import { CSSTransition } from 'react-transition-group';
 
 export interface SubMenuProps { 
   index?: string;
@@ -72,9 +73,19 @@ const SubMenu: React.FC<SubMenuProps> = ({
       }
     })
     return (
-      <ul className={subMenuClasses}>
-        {childrenComponent}
-      </ul>
+      <CSSTransition
+        in={menuOpen}
+        // menuOpen为true，则开始添加动画效果-enter路线。false则添加-exit路线
+        timeout={300}
+        // 300ms以后开始进行动画过程(即添加enter(exit)等类)
+        appear
+        classNames='zoom-in-top'
+        // 使用zoom-in-top-enter; zoom-in-top-enter-active; zoom-in-top-exit; zoom-in-top-exit-active来添加动画。一般是在active上添加transition
+      >
+        <ul className={subMenuClasses}>
+          {childrenComponent}
+        </ul>
+      </CSSTransition>
     )
   }
 

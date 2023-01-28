@@ -1,0 +1,27 @@
+// 从animate.css找动画
+.zoom-in-top-enter {
+  opacity: 0;
+  transform: scaleY(0);
+}
+
+.zoom-in-top-enter-active {
+  opacity: 1;
+  transform: scaleY(1);
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1) 100ms, opacity 300ms cubic-bezier(0.23, 1, 0.32, 1) 100ms;
+  // 第一个参数是css动画作用的style属性，分别是transform以及opacity
+  // 第二个参数是整个动画持续时间是300ms
+  // 变化过程使用cubic-bezier曲线
+  // transaction的delay是100ms，hover className的100ms以后开始运行该动画
+  transform-origin: center top;
+}
+
+.zoom-in-top-enter {
+  opacity: 1;
+}
+
+.zoom-in-top-enter-active {
+  opacity: 0;
+  transform: scaleY(0);
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1) 100ms, opacity 300ms cubic-bezier(0.23, 1, 0.32, 1) 100ms;
+  transform-origin: center top;
+}
