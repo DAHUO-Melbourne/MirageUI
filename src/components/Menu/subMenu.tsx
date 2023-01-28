@@ -76,6 +76,10 @@ const SubMenu: React.FC<SubMenuProps> = ({
       <CSSTransition
         in={menuOpen}
         // menuOpen为true，则开始添加动画效果-enter路线。false则添加-exit路线
+        unmountOnExit
+        // dropdown的显示和隐藏是靠类名来决定的，但是这样很影响className的复用。
+        // 现在我们做个更改：通过一prop，来让他in为true则显示子元素，in为false则隐藏子元素
+        // 这个prop的名字就是unmountOnExit，unmountOnExit默认为false，但是如果为true，意思就是当类名为*-exit-done，则隐藏子元素
         timeout={300}
         // 300ms以后开始进行动画过程(即添加enter(exit)等类)
         appear
