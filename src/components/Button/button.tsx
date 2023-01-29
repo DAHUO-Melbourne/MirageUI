@@ -24,7 +24,8 @@ export type ButtonProps = Partial<NativeButtonProps & AnchorButtonProps>;
 // 因为我们的组件里包含了button的属性，也包含了anchor的属性。所以当我们要做一个button的时候，很多anchor的属性我们就没法传入。这个时候就会报错。
 // 解决的办法是： 给所有的属性设置成可选属性，也就是partial
 
-const Button: React.FunctionComponent<ButtonProps> = ({
+export const Button: React.FunctionComponent<ButtonProps> = ({
+  // 需要将Button本身也导出(这一步是为了storybook，只有这样storybook才能自动获取到我们写的button的各自参数以及取值，从而自动在storybook页面上生成参数列表)
   className,
   disabled,
   size,
