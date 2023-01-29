@@ -135,4 +135,5 @@ export default App;
  * 1. 能够展示组件在不同属性下的状态
  * 2. 能追踪组件在不同用户事件下的行为，并且具有调试功能
  * 3. 能自动生成文档 && 属性列表
+ * 我们使用storybook：https://storybook.js.org/
  */
