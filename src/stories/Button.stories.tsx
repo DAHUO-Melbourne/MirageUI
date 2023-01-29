@@ -44,3 +44,4 @@ export const MyButton = () => (
   <Button label='my button check'></Button>
 )
 // 这里就是添加Button case的地方，在这里添加就可以添加不同的类型
+// 一个story就是渲染了组件的一种属性状态
