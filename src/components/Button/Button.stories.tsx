@@ -12,29 +12,51 @@ const buttonMeta: ComponentMeta<typeof Button> = {
 
 export default buttonMeta;
 
-export const Default: ComponentStory<typeof Button> = (args) => (
-  // 有了args就可以在storybook页面里自由的根据用户的参数选择来render出对应的样式了
-  // 用户在storybook页面做出怎样的选择，其对应的args的值就会传入到args当中从而渲染出不同的button样式
-  <Button {...args}>Default Button</Button>
-);
-Default.storyName='Default Button';
-// 假如不添加这一属性的话，storyName的名称自动是你的函数名称，也就是Default
+// 为了解决代码复用的问题，我们决定使用模板去渲染button的基本样式，通过修改参数来渲染不同的button：
+export const Template: ComponentStory<typeof Button> = (args) => (
+  <Button {...args}></Button>
+)
+export const Default = Template.bind({});
+// 第一步创建一个函数的副本：
+Default.args = {
+  children: 'Default Button'
+}
+// 修改args来调整render的具体样式结果
+Default.storyName='Default';
 
-// 这种写法(：ComponentStory) = () => ()的就是让storybook渲染这一种的组件类型
 
-export const ButtonWithSize: ComponentStory<typeof Button> = () => (
-  <>
-    <Button size="lg">Large Button</Button>
-    <Button size="sm">Small Button</Button>
-  </>
-);
-ButtonWithSize.storyName='Button With Size';
+export const Large = Template.bind({});
+Large.args = {
+  size: 'lg',
+  children: 'Large Button'
+}
+Large.storyName='Large';
 
-export const ButtonWithType: ComponentStory<typeof Button> = () => (
-  <>
-    <Button btnType="primary">Primary Button</Button>
-    <Button btnType="danger">Danger Button</Button>
-    <Button btnType="link" href='https://www.google.com.au'>Link Button</Button>
-  </>
-);
-ButtonWithType.storyName='Button With different types';
+export const Small = Template.bind({});
+Small.args = {
+  size: 'sm',
+  children: 'Small Button'
+}
+Small.storyName='Small';
+
+export const Primary = Template.bind({});
+Primary.args = {
+  btnType: 'primary',
+  children: 'Primary Button'
+}
+Primary.storyName='Primary';
+
+export const Danger = Template.bind({});
+Danger.args = {
+  btnType: 'danger',
+  children: 'Danger Button'
+}
+Danger.storyName='Danger';
+
+export const Link = Template.bind({});
+Link.args = {
+  btnType: 'link',
+  href: 'https://www.google.com',
+  children: 'Link Button'
+}
+Link.storyName='Link';
