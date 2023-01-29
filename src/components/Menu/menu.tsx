@@ -31,7 +31,7 @@ export const MenuContext = createContext<IMenuContext>({index: '0'});
 // 函数体中，可以根据具体参数的情况，来修改context里的内容
 // 这里只是创建，类似useState, 其中不知有context的值，他同时也创建了provider和consumer
 
-const Menu: React.FC<MenuProps> = ({
+export const Menu: React.FC<MenuProps> = ({
   defaultIndex,
   className,
   mode,

@@ -13,7 +13,7 @@ export interface SubMenuProps {
   children: React.ReactNode;
 }
 
-const SubMenu: React.FC<SubMenuProps> = ({
+export const SubMenu: React.FC<SubMenuProps> = ({
   index,
   title,
   className,
