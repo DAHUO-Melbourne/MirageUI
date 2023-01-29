@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button, {ButtonType, ButtonSize} from './components/Button/button';
 import Menu from './components/Menu/menu';
 import MenuItem from './components/Menu/menuItem';
@@ -6,10 +6,12 @@ import SubMenu from './components/Menu/subMenu';
 import Icon from './components/Icon/Icon';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
+import Transition from './components/Transition/Transition';
 
 library.add(fas);
 
 function App() {
+  const [show, setShow] = useState(false);
   return (
     <div className="App">
       <header className="App-header">
@@ -33,6 +35,43 @@ function App() {
           </MenuItem>
           </SubMenu>
         </Menu>
+        <Button size='lg' onClick={() => setShow(!show)}> Toggle </Button>
+        <Transition
+          in={show}
+          timeout={300}
+          classNames='zoom-in-left'
+        >
+          <div>
+            <p>
+              Edit <code>src/App.tsx</code> and save to reload.
+            </p>
+            <p>
+              Edit <code>src/App.tsx</code> and save to reload.
+            </p>
+            <p>
+              Edit <code>src/App.tsx</code> and save to reload.
+            </p>
+            <p>
+              Edit <code>src/App.tsx</code> and save to reload.
+            </p>
+            <p>
+              Edit <code>src/App.tsx</code> and save to reload.
+            </p>
+          </div>
+        </Transition>
+        <Transition
+          in={show}
+          timeout={300}
+          classNames='zoom-in-left'
+          wrapper
+        >
+          <Button size='lg' btnType='primary'>A Large Button</Button>
+          {/**
+           * 因为Transition的动画类名，是作用在子元素身上的。但是因为Button本身已经有了transition属性。因此如果这么加的话两个transition会冲突，于是就不会有动画效果了
+           * 解决方法是：如果子元素有transition，就在子元素外面加一个wrapper，将Transition的动画类名加在wrapper上
+           * 因为父元素的transition无法被子元素继承，因此两个transition就不会冲突了
+           */}
+        </Transition>
         <Button autoFocus> Hello </Button>
         <Button
           disabled
@@ -40,28 +79,28 @@ function App() {
           Disabled Button 
         </Button>
         <Button
-          btnType={ButtonType.Primary}
-          size={ButtonSize.Large}
+          btnType='primary'
+          size='lg'
         >
           Large Primary 
         </Button>
         <Button
-          btnType={ButtonType.Danger}
-          size={ButtonSize.Small}
+          btnType='danger'
+          size='sm'
         >
           Small Danger 
         </Button>
         <Button
-          btnType={ButtonType.Link}
-          size={ButtonSize.Large}
+          btnType='link'
+          size='lg'
           href='https://www.google.com.au'
           target='_blank'
         >
           Google 
         </Button>
         <Button
-          btnType={ButtonType.Link}
-          size={ButtonSize.Large}
+          btnType='link'
+          size='lg'
           href='https://www.google.com.au'
           disabled
         >
