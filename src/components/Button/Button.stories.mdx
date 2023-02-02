@@ -1,0 +1,38 @@
+mdx文件是一种将jsx代码与markdown结合在一起的文件格式，但是其实也可以使用JSDoc与decoration来进行结合
+import {Meta, Canvas, Story} from '@storybook/addon-docs';
+import Button from './button';
+
+<Meta title="Testing MDX" component={Button} />
+
+<style>
+  {
+    `
+    .jsx-title {
+      color: blue
+    }
+    `
+  }
+</style>
+
+export const Template = (args) => (
+  <Button {...args}></Button>
+)
+
+# This is a testing 
+
+```js
+const a = 'abc';
+```
+
+<h1 className = 'jsx-title'>title using jsx</h1>
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      children: 'default button'
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
