@@ -3,10 +3,17 @@
 import React from "react";
 import Button from "./button";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+import mdx from "./Button.mdx";
 
 const buttonMeta: ComponentMeta<typeof Button> = {
   title: 'Mirage Button',
-  component: Button
+  component: Button,
+  parameters: {
+    docs: {
+      page: mdx
+      // 指定具体的mdx文件作为文档, 使用ArgsTable来显示参数，使用Canvas和Story来render组件
+    }
+  }
 }
 // 相当于是确定这一个section的名称叫Mirage Button，接下来要渲染的storybook全是Button
 
