@@ -23,6 +23,16 @@ Default.args = {
 }
 // 修改args来调整render的具体样式结果
 Default.storyName='Default';
+/** decorator的作用是在storybook中渲染的组件dom中，添加一些外部容器样式来让他变得更整洁
+ * 语法就是数组，里面可以添加很多项
+ * 参数是一个组件，返回另一个组件：(Story)就是一个组件，=> () 返回的就是另一个组件，在返回的组件外面加一层div来包裹，里面添加margin
+ */
+Default.decorators = [
+  (Story) => (
+    <div style={{margin: 50}}><Story /></div>
+  )
+];
+
 
 
 export const Large = Template.bind({});

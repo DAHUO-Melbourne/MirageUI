@@ -8,8 +8,11 @@ export type ButtonType = 'primary' | 'default' | 'danger' | 'link';
 
 interface BaseButtonProps {
   className?: string;
+  /** set disable to the button press */
   disabled?: boolean;
+  /** set up the size of the button */
   size?: ButtonSize;
+  /** set up the type of the button(color etc) */
   btnType?: ButtonType;
   children: React.ReactNode;
   href?: string;
@@ -24,6 +27,14 @@ export type ButtonProps = Partial<NativeButtonProps & AnchorButtonProps>;
 // 因为我们的组件里包含了button的属性，也包含了anchor的属性。所以当我们要做一个button的时候，很多anchor的属性我们就没法传入。这个时候就会报错。
 // 解决的办法是： 给所有的属性设置成可选属性，也就是partial
 
+/**
+ * Button element used to be pressed
+ * ### import method
+ * ```js
+ * import {Button} from 'MirageUI'
+ * ```
+ * 这种是JSDoc格式的注释。添加注释以后可以自动给storybook添加文档
+ */
 export const Button: React.FunctionComponent<ButtonProps> = ({
   // 需要将Button本身也导出(这一步是为了storybook，只有这样storybook才能自动获取到我们写的button的各自参数以及取值，从而自动在storybook页面上生成参数列表)
   className,
