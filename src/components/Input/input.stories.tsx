@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Input } from './Input';
 
 const ControlledInput = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string>();
   return <Input value={value} defaultValue={value} onChange={(e) => setValue(e.target.value)} />
 }
 export default {
