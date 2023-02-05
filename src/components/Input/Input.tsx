@@ -71,13 +71,13 @@ export const Input: React.FC<InputProps> = ({
       {prepend && <div className='mirage-input-group-prepend'>{prepend}</div>}
       {icon && <div className='icon-wrapper'><Icon icon={icon} title={`title-${icon}`} /></div>}
       <input
-        className="viking-input-inner"
+        className="mirage-input-inner"
         disabled={disabled}
         value={value}
         onChange={onChange}
         {...restProps}
       />
-      {append && <div className="viking-input-group-append">{append}</div>}
+      {append && <div className="mirage-input-group-append">{append}</div>}
     </div>
   )
 }
