@@ -73,6 +73,8 @@ export const Input: React.FC<InputProps> = ({
       <input
         className="viking-input-inner"
         disabled={disabled}
+        value={value}
+        onChange={onChange}
         {...restProps}
       />
       {append && <div className="viking-input-group-append">{append}</div>}
