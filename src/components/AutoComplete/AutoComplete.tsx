@@ -1,5 +1,6 @@
 import React, {ChangeEvent, ReactElement, useState} from 'react';
 import Input, {InputProps} from '../Input/Input';
+import Icon from '../Icon/Icon';
 
 interface DataSourceObject {
   value: string;
@@ -10,7 +11,7 @@ export type DataSourseType<T = {}> = T & DataSourceObject;
 // 如果没有传入T，那么他的类型就是DataSourceObject，即一个object，有一个field，key叫value
 
 interface AutoCompleteProps extends Omit<InputProps, 'onSelect'> {
-  fetchSuggestions: (p: string) => DataSourseType[];
+  fetchSuggestions: (p: string) => DataSourseType[] | Promise<DataSourseType[]>;
   onSelect?: (p: DataSourseType) => void;
   renderOption?: (p: DataSourseType) => ReactElement;
   // 当用户打算自定义 显示的dropdown的item的样式的时候，就需要用到这个prop来自定义打算如何render这些item
@@ -32,17 +33,29 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
 
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState<DataSourseType[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const renderTemplate = (item : DataSourseType) => {
     return renderOption ? renderOption(item) : item.value
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setLoading(true);
     const value = e.target.value;
     setInputValue(value);
     if (value) {
+
       const results = fetchSuggestions(value);
-      setSuggestions(results);
+      if (results instanceof Promise) {
+        // 判断results是不是一个promise
+        console.log('triggered');
+        results.then((data) => {
+          setSuggestions(data);
+          setLoading(false);
+        })        
+      } else {
+        setSuggestions(results);
+      }
     } else {
       setSuggestions([]);
     }
@@ -75,6 +88,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
         onChange={handleChange}
         {...restProps}
       />
+      {loading && <ul><Icon icon='spinner' spin /></ul>}
       {suggestions.length > 0 && generateDropdown()}
     </div>
   )
