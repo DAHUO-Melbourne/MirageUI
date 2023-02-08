@@ -1,6 +1,7 @@
-import React, {ChangeEvent, ReactElement, useState} from 'react';
+import React, {ChangeEvent, ReactElement, useState, useEffect} from 'react';
 import Input, {InputProps} from '../Input/Input';
 import Icon from '../Icon/Icon';
+import useDebounce from '../../hooks/useDebounce';
 
 interface DataSourceObject {
   value: string;
@@ -35,17 +36,12 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
   const [suggestions, setSuggestions] = useState<DataSourseType[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const renderTemplate = (item : DataSourseType) => {
-    return renderOption ? renderOption(item) : item.value
-  }
+  const debounceValue = useDebounce(inputValue, 500);
+  // 500ms以后才设置debounceValue的值
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setLoading(true);
-    const value = e.target.value;
-    setInputValue(value);
-    if (value) {
-
-      const results = fetchSuggestions(value);
+  useEffect(() => {
+    if (debounceValue) {
+      const results = fetchSuggestions(debounceValue);
       if (results instanceof Promise) {
         // 判断results是不是一个promise
         console.log('triggered');
@@ -59,6 +55,18 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
     } else {
       setSuggestions([]);
     }
+  
+    return () => {}
+  }, [debounceValue])
+  
+  const renderTemplate = (item : DataSourseType) => {
+    return renderOption ? renderOption(item) : item.value
+  }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setLoading(true);
+    const value = e.target.value;
+    setInputValue(value);
   }
 
   const handleSelect = (item: DataSourseType) => {
