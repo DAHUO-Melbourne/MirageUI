@@ -1,9 +1,10 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, ReactElement, useState} from 'react';
 import Input, {InputProps} from '../Input/Input';
 
 interface AutoCompleteProps extends Omit<InputProps, 'onSelect'> {
   fetchSuggestions: (p: string) => string[];
   onSelect?: (p: string) => void;
+  renderOption?: (p: string) => ReactElement
 }
 
 export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompleteProps) => {
@@ -11,11 +12,16 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
     fetchSuggestions,
     onSelect,
     value,
+    renderOption,
     ...restProps
   } = props;
 
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  const renderTemplate = (item : string) => {
+    return renderOption ? renderOption(item) : item
+  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -41,7 +47,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
       <ul>
         {suggestions.map((item, index) => (
           <li key={index} onClick={() => handleSelect(item)}>
-            {item}
+            {renderTemplate(item)}
           </li>
         ))}
       </ul>

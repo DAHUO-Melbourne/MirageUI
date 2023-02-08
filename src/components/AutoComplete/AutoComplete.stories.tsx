@@ -10,10 +10,17 @@ const SimpleComplete = () => {
     return lakers.filter(name => name.includes(query));
   }
 
+  const renderOption = (item: string) => {
+    return (
+      <h2>Name: {item}</h2>
+    )
+  }
+
   return (
     <AutoComplete
       fetchSuggestions={handleFetch}
       onSelect={action('selected')}
+      renderOption={renderOption}
     />
   )
 }
