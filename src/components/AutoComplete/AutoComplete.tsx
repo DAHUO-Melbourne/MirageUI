@@ -4,6 +4,7 @@ import Icon from '../Icon/Icon';
 import useDebounce from '../../hooks/useDebounce';
 import useClickOutside from '../../hooks/useClickOutside';
 import classNames from 'classnames';
+import Transition from '../Transition/Transition';
 
 interface DataSourceObject {
   value: string;
@@ -41,6 +42,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
   const triggerCurrent = useRef(false);
   const componentRef = useRef<HTMLDivElement>(null);
   const debounceValue = useDebounce(inputValue, 500);
+  const [showDropdown, setShowDropdown] = useState(false)
   useClickOutside(componentRef, () => setSuggestions([]));
   // 500ms以后才设置debounceValue的值
 
@@ -53,12 +55,16 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
         results.then((data) => {
           setSuggestions(data);
           setLoading(false);
+          if (data.length > 0) {
+            setShowDropdown(true)
+          }
         })        
       } else {
         setSuggestions(results);
+        setShowDropdown(true);
       }
     } else {
-      setSuggestions([]);
+      setShowDropdown(false);
     }
     setHighLightIndex(-1);
   }, [debounceValue])
@@ -76,6 +82,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
 
   const handleSelect = (item: DataSourseType) => {
     setInputValue(item.value);
+    setShowDropdown(false);
     setSuggestions([]);
     if (onSelect) {
       onSelect(item);
@@ -109,6 +116,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
         break;
       case 27:
         // esc
+        setShowDropdown(false);
         setSuggestions([]);
         break;
       default:
@@ -118,23 +126,35 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
 
   const generateDropdown = () => {
     return (
-      <ul>
-        {suggestions.map((item, index) => {
-          const cnames = classNames('suggestions-item', {
-            'item-highlighted': index === highLightIndex
-          })
-          return (
-            <li key={index} className={cnames} onClick={() => handleSelect(item)}>
-              {renderTemplate(item)}
-            </li>
-          )
-        })}
-      </ul>
+      <Transition
+      in={showDropdown || loading}
+      animation="zoom-in-top"
+      timeout={300}
+      onExited={() => setSuggestions([])}
+    >
+        <ul className="mirage-suggestion-list">
+          { loading &&
+            <div className="suggstion-loading-icon">
+              <Icon icon="spinner" spin/>
+            </div>
+          }
+          {suggestions.map((item, index) => {
+            const cnames = classNames('suggestion-item', {
+              'item-highlighted': index === highLightIndex
+            })
+            return (
+              <li key={index} className={cnames} onClick={() => handleSelect(item)}>
+                {renderTemplate(item)}
+              </li>
+            )
+          })}
+        </ul>
+      </Transition>
     )
   }
 
   return (
-    <div className='mirage-auto-complete-wrapper' ref={componentRef}>
+    <div className='mirage-auto-complete' ref={componentRef}>
       <Input
         value={inputValue}
         onChange={handleChange}
