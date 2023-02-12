@@ -2,6 +2,7 @@ import React, {ChangeEvent, ReactElement, useState, useEffect, KeyboardEvent, us
 import Input, {InputProps} from '../Input/Input';
 import Icon from '../Icon/Icon';
 import useDebounce from '../../hooks/useDebounce';
+import useClickOutside from '../../hooks/useClickOutside';
 import classNames from 'classnames';
 
 interface DataSourceObject {
@@ -38,7 +39,9 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
   const [loading, setLoading] = useState(false);
   const [highLightIndex, setHighLightIndex] = useState(-1);
   const triggerCurrent = useRef(false);
+  const componentRef = useRef<HTMLDivElement>(null);
   const debounceValue = useDebounce(inputValue, 500);
+  useClickOutside(componentRef, () => setSuggestions([]));
   // 500ms以后才设置debounceValue的值
 
   useEffect(() => {
@@ -131,7 +134,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
   }
 
   return (
-    <div className='mirage-auto-complete-wrapper'>
+    <div className='mirage-auto-complete-wrapper' ref={componentRef}>
       <Input
         value={inputValue}
         onChange={handleChange}
