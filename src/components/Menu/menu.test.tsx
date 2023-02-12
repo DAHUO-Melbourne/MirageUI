@@ -3,6 +3,7 @@ import {cleanup, fireEvent, render, RenderResult, screen, waitFor} from '@testin
 import Menu, {MenuProps} from './menu';
 import MenuItem from "./menuItem";
 import SubMenu from "./subMenu";
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 const testProps: MenuProps = {
   defaultIndex: '0',

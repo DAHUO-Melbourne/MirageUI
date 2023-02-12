@@ -14,7 +14,7 @@ export type DataSourseType<T = {}> = T & DataSourceObject;
 // 这里就是使用泛型来解决：不确定数据类型的方法。在不同使用场景下，通过动态的传入不同的T，即泛型，来产生不同的类型。
 // 如果没有传入T，那么他的类型就是DataSourceObject，即一个object，有一个field，key叫value
 
-interface AutoCompleteProps extends Omit<InputProps, 'onSelect'> {
+export interface AutoCompleteProps extends Omit<InputProps, 'onSelect'> {
   fetchSuggestions: (p: string) => DataSourseType[] | Promise<DataSourseType[]>;
   onSelect?: (p: DataSourseType) => void;
   renderOption?: (p: DataSourseType) => ReactElement;
@@ -154,14 +154,13 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
   }
 
   return (
-    <div className='mirage-auto-complete' ref={componentRef}>
+    <div className='mirage-auto-complete' ref={componentRef} data-testid='mirage-auto-complete'>
       <Input
         value={inputValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         {...restProps}
       />
-      {loading && <ul><Icon icon='spinner' spin /></ul>}
       {suggestions.length > 0 && generateDropdown()}
     </div>
   )
