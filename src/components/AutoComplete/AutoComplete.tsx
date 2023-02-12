@@ -1,4 +1,4 @@
-import React, {ChangeEvent, ReactElement, useState, useEffect, KeyboardEvent} from 'react';
+import React, {ChangeEvent, ReactElement, useState, useEffect, KeyboardEvent, useRef} from 'react';
 import Input, {InputProps} from '../Input/Input';
 import Icon from '../Icon/Icon';
 import useDebounce from '../../hooks/useDebounce';
@@ -37,12 +37,12 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
   const [suggestions, setSuggestions] = useState<DataSourseType[]>([]);
   const [loading, setLoading] = useState(false);
   const [highLightIndex, setHighLightIndex] = useState(-1);
-
+  const triggerCurrent = useRef(false);
   const debounceValue = useDebounce(inputValue, 500);
   // 500ms以后才设置debounceValue的值
 
   useEffect(() => {
-    if (debounceValue) {
+    if (debounceValue && triggerCurrent.current) {
       const results = fetchSuggestions(debounceValue);
       if (results instanceof Promise) {
         // 判断results是不是一个promise
@@ -68,6 +68,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
     setLoading(true);
     const value = e.target.value;
     setInputValue(value);
+    triggerCurrent.current = true;
   }
 
   const handleSelect = (item: DataSourseType) => {
@@ -76,6 +77,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props: AutoCompletePro
     if (onSelect) {
       onSelect(item);
     }
+    triggerCurrent.current = false;
   }
 
   const highLight = (index: number) => {
