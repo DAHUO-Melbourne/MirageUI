@@ -15,8 +15,12 @@ library.add(fas);
 function App() {
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState('');
+  const postData = {
+    title: 'my title',
+    body: 'hello man',
+  }
   useEffect(() => {
-    axios.get('https://jsonplaceholder.typicode.com/posts/1', {
+    axios.post('https://jsonplaceholder.typicode.com/posts', postData, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
       },
