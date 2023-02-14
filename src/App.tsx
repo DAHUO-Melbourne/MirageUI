@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Button, {ButtonType, ButtonSize} from './components/Button/button';
 import Menu from './components/Menu/menu';
 import MenuItem from './components/Menu/menuItem';
@@ -8,11 +8,26 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import Transition from './components/Transition/Transition';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 
 library.add(fas);
 
 function App() {
   const [show, setShow] = useState(false);
+  const [title, setTitle] = useState('');
+  useEffect(() => {
+    axios.get('https://jsonplaceholder.typicode.com/posts/1', {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+      responseType: 'json',
+    })
+      .then(resp => {
+        console.log(resp)
+        setTitle(resp.data.title);
+      })
+  }, [])
+  
   return (
     <div className="App">
       <header className="App-header">
@@ -118,6 +133,7 @@ function App() {
         >
           Learn React
         </a>
+        <h1>{title}</h1>
       </header>
     </div>
   );
@@ -137,4 +153,9 @@ export default App;
  * 2. 能追踪组件在不同用户事件下的行为，并且具有调试功能
  * 3. 能自动生成文档 && 属性列表
  * 我们使用storybook：https://storybook.js.org/
+ */
+
+/**
+ * 第十章：模拟服务器用到的工具一个是JSONPlaceholder
+ * 另一个是Mocky.io
  */
