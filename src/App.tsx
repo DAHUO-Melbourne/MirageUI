@@ -30,7 +30,25 @@ function App() {
         console.log(resp)
         setTitle(resp.data.title);
       })
-  }, [])
+  }, []);
+
+  const handleFileChange  = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    //获取到所有用户选中的files
+    if (files) {
+      const uploadedFile = files[0];
+      const formData = new FormData();
+      formData.append(uploadedFile.name, uploadedFile);
+      axios.post('https://jsonplaceholder.typicode.com/posts', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          // 使用multipart/form-data以便更快速的上传file
+        }
+      }).then((resp) => {
+        console.log(resp);
+      })
+    }
+  }
   
   return (
     <div className="App">
@@ -139,15 +157,7 @@ function App() {
         </a>
         <h1>{title}</h1>
       </header>
-      <form method='post' encType='multipart/form-data' action='https://jsonplaceholder.typicode.com/posts'>
-        {/**
-         * method意思就是http action是一个post请求。action是一个url，往action的url里发送method的网络api请求 
-         * 此外，如果发送的是文件（二进制binary）格式，那么entype就应该是multipart/form-data
-         * 
-         * */}
-        <input type='file' name='myFile' />
-        <button type='submit'>Submit</button>
-      </form>
+      <input type='file' name='myFile' onChange={handleFileChange} />
     </div>
   );
 }
