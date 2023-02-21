@@ -9,12 +9,14 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import Transition from './components/Transition/Transition';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import DatePicker from './components/DatePicker/DatePicker';
 
 library.add(fas);
 
 function App() {
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
   const postData = {
     title: 'my title',
     body: 'hello man',
@@ -158,6 +160,7 @@ function App() {
         <h1>{title}</h1>
       </header>
       <input type='file' name='myFile' onChange={handleFileChange} />
+      <DatePicker title='date picker' selectedDate={selectedDate} onSelect={setSelectedDate}/>
     </div>
   );
 }
