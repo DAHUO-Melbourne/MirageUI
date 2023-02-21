@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC, useRef} from 'react'
+import React, {ChangeEvent, FC, useRef, useState} from 'react'
 import axios from 'axios';
 
 import Button from '../Button/button';
@@ -13,6 +13,19 @@ export interface UploadProps {
   onChange?: (p: File) => void;
 }
 
+export type UploadFileStatus = 'ready' | 'uploading' | 'success' | 'error';
+
+export interface UploadFile {
+  uid: string;
+  size: number;
+  name: string;
+  status?: UploadFileStatus;
+  percent?: number;
+  raw?: File;
+  response?: any;
+  error?: any;
+}
+
 export const Upload: FC<UploadProps> = (props) => {
   const {
     action,
@@ -24,6 +37,23 @@ export const Upload: FC<UploadProps> = (props) => {
   } = props;
 
   const fileInput = useRef<HTMLInputElement>(null);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const updateFileList = (updateFile: UploadFile, updateObj: Partial<UploadFile>) => {
+    // Partial意思是值可以是UploadFile的一部分field，不用是全部的field
+    setFileList(prevList => {
+      return prevList.map(file => {
+        // map返回的是一个新数组，所以就没有在原数组之上更新。
+        if (file.uid === updateFile.uid) {
+          return { ...file, ...updateObj }
+        } else {
+          return file
+        }
+      })
+    })
+  }
+
+  console.log(fileList);
 
   const handleClick = () => {
     if (fileInput.current) {
@@ -65,6 +95,15 @@ export const Upload: FC<UploadProps> = (props) => {
   }
 
   const post = (file: File) => {
+      let _file: UploadFile = {
+        uid: Date.now() + 'upload-file',
+        status: 'ready',
+        name: file.name,
+        size: file.size,
+        percent: 0,
+        raw: file,
+      }
+      setFileList([_file, ...fileList]);
       const formData = new FormData();
       formData.append(file.name, file);
       axios.post(action, formData, {
@@ -76,14 +115,23 @@ export const Upload: FC<UploadProps> = (props) => {
           // @ts-ignore
           let percentage = Math.round((e.loaded * 100) / e.total) || 0;
           if (percentage < 100) {
+            updateFileList(_file, { percent: percentage, status: 'uploading'});
+            // setFileList((prevList) => {
+            //   console.log(prevList);
+            //   // 这种方法可以拿到最新的状态值。通过传入一个函数，参数就是最新的这个state的值。然后return的是更新完成之后的值。
+            //   // 注意：用这种方法不可以直接更新prevList，这样更新会失败。判断是否是不同的变量，方法是根据object.is
+            //   return prevList;
+            // })
             onProgress && onProgress(percentage, file);
           }
         }
       }).then((resp) => {
+        updateFileList(_file, {status: 'success', response: resp.data})
         console.log(resp);
         onSuccess && onSuccess(resp.data, file)
         onChange && onChange(file);
       }).catch((err) => {
+        updateFileList(_file, { status: 'error', error: err})
         console.error(err);
         onError && onError(err, file);
         onChange && onChange(file);
