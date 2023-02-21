@@ -8,6 +8,9 @@ export interface UploadProps {
   onProgress?: (percentage: number, file: File) => void;
   onSuccess?: (data: any, file: File) => void;
   onError?: (err: any, file: File) => void;
+  beforeUpload?: (p: File) => boolean | Promise<File>;
+  // 用处是让用户在上传之前，可以先验证文件的类型（Boolean），或者对文件类型进行转换（Promise）。
+  onChange?: (p: File) => void;
 }
 
 export const Upload: FC<UploadProps> = (props) => {
@@ -16,6 +19,8 @@ export const Upload: FC<UploadProps> = (props) => {
     onProgress,
     onSuccess,
     onError,
+    beforeUpload,
+    onChange,
   } = props;
 
   const fileInput = useRef<HTMLInputElement>(null);
@@ -42,6 +47,24 @@ export const Upload: FC<UploadProps> = (props) => {
     let postFiles = Array.from(files);
     // 使用Array.from将files从FileList类型转化为list数组，然后就可以使用forEach
     postFiles.forEach((file) => {
+      if (!beforeUpload) {
+        post(file);
+      } else {
+        const result = beforeUpload(file);
+        if (result && result instanceof Promise) {
+          // 如果文件是promise类型的话，那么就发送文件
+          result.then(processFile => {
+            post(processFile);
+          })
+        } else if (result !== false) {
+          // 如果返回值是布尔类型，那么如果结果是true。直接发送
+            post(file);
+        }
+      }
+    })
+  }
+
+  const post = (file: File) => {
       const formData = new FormData();
       formData.append(file.name, file);
       axios.post(action, formData, {
@@ -59,11 +82,12 @@ export const Upload: FC<UploadProps> = (props) => {
       }).then((resp) => {
         console.log(resp);
         onSuccess && onSuccess(resp.data, file)
+        onChange && onChange(file);
       }).catch((err) => {
         console.error(err);
         onError && onError(err, file);
+        onChange && onChange(file);
       })
-    })
   }
 
   return (
