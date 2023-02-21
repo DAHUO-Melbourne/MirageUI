@@ -1,16 +1,18 @@
 import React, {ChangeEvent, FC, useRef, useState} from 'react'
 import axios from 'axios';
-
+import UploadList from './UploadList';
 import Button from '../Button/button';
 
 export interface UploadProps {
   action: string;
+  defaultFileList?: UploadFile[];
   onProgress?: (percentage: number, file: File) => void;
   onSuccess?: (data: any, file: File) => void;
   onError?: (err: any, file: File) => void;
   beforeUpload?: (p: File) => boolean | Promise<File>;
   // 用处是让用户在上传之前，可以先验证文件的类型（Boolean），或者对文件类型进行转换（Promise）。
   onChange?: (p: File) => void;
+  onRemove?: (file: UploadFile) => void;
 }
 
 export type UploadFileStatus = 'ready' | 'uploading' | 'success' | 'error';
@@ -29,15 +31,17 @@ export interface UploadFile {
 export const Upload: FC<UploadProps> = (props) => {
   const {
     action,
+    defaultFileList,
     onProgress,
     onSuccess,
     onError,
     beforeUpload,
     onChange,
+    onRemove,
   } = props;
 
   const fileInput = useRef<HTMLInputElement>(null);
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [fileList, setFileList] = useState<UploadFile[]>(defaultFileList ?? []);
 
   const updateFileList = (updateFile: UploadFile, updateObj: Partial<UploadFile>) => {
     // Partial意思是值可以是UploadFile的一部分field，不用是全部的field
@@ -138,6 +142,16 @@ export const Upload: FC<UploadProps> = (props) => {
       })
   }
 
+  const handleRemove = (file: UploadFile) => {
+    setFileList((prevList) => {
+      return prevList.filter(item => item.uid !== file.uid)
+      // 使用filter来指定删除数组某一项
+    })
+    if (onRemove) {
+      onRemove(file)
+    }
+  }
+
   return (
     <div
       className='mirage-upload-component'
@@ -154,6 +168,10 @@ export const Upload: FC<UploadProps> = (props) => {
         ref={fileInput}
         onChange={handleFileChange}
         type='file'
+      />
+      <UploadList
+        fileList={fileList}
+        onRemove={handleRemove}
       />
     </div>
   )
