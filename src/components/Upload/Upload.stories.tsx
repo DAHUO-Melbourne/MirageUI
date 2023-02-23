@@ -1,7 +1,13 @@
 import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import React from 'react'
-import Upload from './Upload'
+import Upload, { UploadFile } from './Upload'
+
+const defaultFileList: UploadFile[] = [
+  {uid: '123', size: 1234, name: 'hello.md', status: 'uploading', percent: 30},
+  {uid: '122', size: 1234, name: 'xyz.md', status: 'success', percent: 30},
+  {uid: '121', size: 1234, name: 'eyiha.md', status: 'error', percent: 30},
+]
 
 const SimpleUpload = () => {
   const checkFileSize = (file: File) => {
@@ -23,6 +29,7 @@ const SimpleUpload = () => {
       onProgress={action('progess')}
       onSuccess={action('success')}
       onError={action('error')}
+      defaultFileList={defaultFileList}
       // beforeUpload={checkFileSize}
       beforeUpload={filePromise}
       onChange={action('changed')}
