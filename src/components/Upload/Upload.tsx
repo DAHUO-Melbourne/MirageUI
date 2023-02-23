@@ -13,6 +13,12 @@ export interface UploadProps {
   // 用处是让用户在上传之前，可以先验证文件的类型（Boolean），或者对文件类型进行转换（Promise）。
   onChange?: (p: File) => void;
   onRemove?: (file: UploadFile) => void;
+  headers?: {[key: string]: any};
+  name?: string;
+  data?: {[key: string]: any};
+  withCredentials?: boolean;
+  accept?: string;
+  multiple?: boolean;
 }
 
 export type UploadFileStatus = 'ready' | 'uploading' | 'success' | 'error';
@@ -38,6 +44,12 @@ export const Upload: FC<UploadProps> = (props) => {
     beforeUpload,
     onChange,
     onRemove,
+    headers,
+    name,
+    data,
+    withCredentials,
+    accept,
+    multiple,
   } = props;
 
   const fileInput = useRef<HTMLInputElement>(null);
@@ -107,13 +119,22 @@ export const Upload: FC<UploadProps> = (props) => {
         percent: 0,
         raw: file,
       }
-      setFileList([_file, ...fileList]);
+      setFileList(prevList => {
+        return [_file, ...prevList];
+      });
       const formData = new FormData();
-      formData.append(file.name, file);
+      formData.append(name || 'file', file);
+      if (data) {
+        Object.keys(data).forEach(key => {
+          formData.append(key, data[key])
+        })
+      }
       axios.post(action, formData, {
         headers: {
+          ...headers,
           'Content-Type': 'multipart/form-data',
         },
+        withCredentials,
         onUploadProgress: (e) => {
           console.log(e);
           // @ts-ignore
@@ -168,6 +189,8 @@ export const Upload: FC<UploadProps> = (props) => {
         ref={fileInput}
         onChange={handleFileChange}
         type='file'
+        accept={accept}
+        multiple={multiple}
       />
       <UploadList
         fileList={fileList}
@@ -177,4 +200,18 @@ export const Upload: FC<UploadProps> = (props) => {
   )
 }
 
+Upload.defaultProps = {
+  name: 'file'
+}
+
 export default Upload;
+
+/**
+ * 新需求分析
+ * 1. 可以自定义api的header的内容
+ * 2. 添加自定义name field
+ * 3. 添加自定义的附加信息 form data
+ * 4. 添加发送时是否携带cookie
+ * 5. 允许同时选择多个文件一起上传
+ * 6. 添加accepted文件类型
+ */

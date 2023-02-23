@@ -31,8 +31,13 @@ const SimpleUpload = () => {
       onError={action('error')}
       defaultFileList={defaultFileList}
       // beforeUpload={checkFileSize}
-      beforeUpload={filePromise}
+      // beforeUpload={filePromise}
       onChange={action('changed')}
+      name='fileName'
+      data={{'key': 'value'}}
+      headers={{'X-powered-By': 'mirage'}}
+      accept='.jpg'
+      multiple
     />
   )
 }
