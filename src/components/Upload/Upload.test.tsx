@@ -6,7 +6,7 @@ import { Upload, UploadProps } from './Upload';
 
 jest.mock('../Icon/icon', () => {
   return (props: any) => {
-    return <span>{props.icon}</span>
+    return <span onClick={props.onClick}>{props.icon}</span>
   };
 });
 
@@ -62,5 +62,47 @@ describe('test upload component', () => {
     expect(testProps.onSuccess).toHaveBeenCalledWith('cool', testFile);
     // 参数是onSuccess函数的参数，也就是onSuccess('cool');
     expect(testProps.onChange).toHaveBeenCalledWith(testFile);
+
+    //remove the uploaded file 测试删除
+    // eslint-disable-next-line testing-library/prefer-presence-queries
+    expect(screen.queryByText('times')).toBeInTheDocument()
+    fireEvent.click(screen.getByText('times'))
+    expect(screen.queryByText('test.png')).not.toBeInTheDocument();
+    expect(testProps.onRemove).toHaveBeenCalledWith(expect.objectContaining({
+      raw: testFile,
+      status: 'success',
+      name: 'test.png'
+    }))
+  });
+
+  it('drag and drop files should works fine', async () => {
+    mockedAxios.post.mockResolvedValue({'data': 'cool'})
+    fireEvent.dragOver(uploadArea)
+    expect(uploadArea).toHaveClass('is-dragover')
+    fireEvent.dragLeave(uploadArea)
+    expect(uploadArea).not.toHaveClass('is-dragover')
+    // const mockDropEvent = createEvent.drop(uploadArea)
+    // Object.defineProperty(mockDropEvent, "dataTransfer", {
+    //   value: {
+    //     files: [testFile]
+    //   }
+    // })
+    // fireEvent(uploadArea, mockDropEvent)
+    fireEvent.drop(uploadArea, {
+      dataTransfer: {
+        files: [testFile]
+      }
+    })
+    await waitFor(() => {
+      // eslint-disable-next-line testing-library/prefer-presence-queries
+      expect(screen.queryByText('test.png')).toBeInTheDocument()
+      // expect(wrapper.queryByText('check-circle')).toBeInTheDocument()
+    })
+    expect(testProps.onSuccess).toHaveBeenCalledWith('cool', expect.objectContaining({
+      raw: testFile,
+      status: 'success',
+      response: 'cool',
+      name: 'test.png'
+    }))
   })
 })
