@@ -1,7 +1,7 @@
 import React, {ChangeEvent, FC, useRef, useState} from 'react'
 import axios from 'axios';
 import UploadList from './UploadList';
-import Button from '../Button/button';
+import Dragger from './Dragger';
 
 export interface UploadProps {
   action: string;
@@ -19,6 +19,8 @@ export interface UploadProps {
   withCredentials?: boolean;
   accept?: string;
   multiple?: boolean;
+  children: React.ReactNode;
+  drag?: boolean;
 }
 
 export type UploadFileStatus = 'ready' | 'uploading' | 'success' | 'error';
@@ -50,6 +52,8 @@ export const Upload: FC<UploadProps> = (props) => {
     withCredentials,
     accept,
     multiple,
+    children,
+    drag,
   } = props;
 
   const fileInput = useRef<HTMLInputElement>(null);
@@ -176,13 +180,16 @@ export const Upload: FC<UploadProps> = (props) => {
   return (
     <div
       className='mirage-upload-component'
+      onClick={handleClick}
     >
-      <Button
-        btnType='primary'
-        onClick={handleClick}
-      >
-        Upload File
-      </Button>
+      {drag ? 
+        <Dragger
+          onFile={(files) => uploadFiles(files)}
+        >
+          {children}
+        </Dragger> :
+        children
+      }
       <input
         className='mirage-file-input'
         style={{display: 'none'}}

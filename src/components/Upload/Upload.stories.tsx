@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import React from 'react'
+import Icon from '../Icon/Icon'
 import Upload, { UploadFile } from './Upload'
 
 const defaultFileList: UploadFile[] = [
@@ -38,9 +39,28 @@ const SimpleUpload = () => {
       headers={{'X-powered-By': 'mirage'}}
       accept='.jpg'
       multiple
-    />
+    >
+    </Upload>
   )
 }
 
+export const CDragUpload = (args: any) => (
+  <Upload
+    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+    onChange={action('changed')}
+    onRemove={action('removed')}
+    name="fileName"
+    multiple
+    drag
+  >
+    <Icon icon="upload" size="5x" theme="secondary" />
+    <br/>
+    <p>drag file here to upload</p>
+  </Upload>
+)
+CDragUpload.storyName = '拖动上传'
+
 storiesOf('Upload modules', module)
-  .add('Upload', SimpleUpload);
+  .add('Upload', CDragUpload);
+  // .add('Upload', SimpleUpload);
+  
