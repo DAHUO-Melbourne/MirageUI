@@ -192,6 +192,7 @@ export const Upload: FC<UploadProps> = (props) => {
       }
       <input
         className='mirage-file-input'
+        data-testid='mirage-file-input'
         style={{display: 'none'}}
         ref={fileInput}
         onChange={handleFileChange}

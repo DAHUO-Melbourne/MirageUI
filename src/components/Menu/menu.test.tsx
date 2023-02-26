@@ -5,6 +5,12 @@ import MenuItem from "./menuItem";
 import SubMenu from "./subMenu";
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+jest.mock('../Icon/icon', () => {
+  return (props: any) => {
+    return <span>{props.icon}</span>
+  };
+});
+
 const testProps: MenuProps = {
   defaultIndex: '0',
   className: 'test',
@@ -97,7 +103,6 @@ describe('test menu and menu items', () => {
     expect(verMenuElement).toHaveClass('mirage-menu menu-vertical');
   });
   it('it should show dropdown items when mode is set to vertical', async () => {
-    // eslint-disable-next-line testing-library/prefer-screen-queries
     expect(screen.queryByText('drop1')).not.toBeVisible();
     // 当没有hover上去的时候，希望这个drop1的元素不要被看见。因为我们已经在beforeEach的时候添加了css类型
     const dropdownElement = screen.getByText('dropdown');

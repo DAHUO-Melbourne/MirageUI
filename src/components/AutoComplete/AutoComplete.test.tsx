@@ -14,6 +14,12 @@ const testArray = [
   {value: 'c', number: 15},
 ];
 
+jest.mock('../Icon/icon', () => {
+  return (props: any) => {
+    return <span>{props.icon}</span>
+  };
+});
+
 const testProps: AutoCompleteProps = {
   fetchSuggestions: (query) => {return testArray.filter(item => item.value.includes(query))},
   onSelect: jest.fn(),
