@@ -189,4 +189,11 @@ export default App;
 /**
  * 第11章：表单
  * 结构应该是：最外层是一个Form，里面是通过Item来包裹不同的组件，比如说可以包裹input/button
+ * 
+ * 管理Form以及FormItem的值，我们需要用到一个Form和FormItem都可以访问到的store来存储值。
+ * 1. 第一步首先初始化store
+ * 2. 当添加一个组件，就要往store里添加一条key value pair来管理他的值
+ * 3. 更新值的时候，需要根据之前输入的key来更新他的value
+ * 4. 当onBlur的时候可以通过key+ value以及rules来更新数据，这个rules是在添加组件的时候随着key value一起添加进store的
+ * 例如： 'username': {name: 'username', value: '', rules: [], isValid: true}
  */
