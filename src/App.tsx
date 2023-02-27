@@ -185,3 +185,8 @@ export default App;
  * 第十章：模拟服务器用到的工具一个是JSONPlaceholder
  * 另一个是Mocky.io
  */
+
+/**
+ * 第11章：表单
+ * 结构应该是：最外层是一个Form，里面是通过Item来包裹不同的组件，比如说可以包裹input/button
+ */
