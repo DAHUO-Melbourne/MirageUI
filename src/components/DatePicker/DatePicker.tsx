@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect} from 'react';
 import classNames from 'classnames';
 
-interface DatePickerProps {
+interface SeminalDatePickerProps {
   onSelect: (p: string) => void;
   title: string;
   required?: boolean;
@@ -9,13 +9,13 @@ interface DatePickerProps {
   placeholder?: string;
 }
 
-const DatePicker = ({
+const SeminalDatePicker = ({
   onSelect,
   title,
   required,
   selectedDate,
   placeholder = 'yyyy-mm-dd',
-}: DatePickerProps) => {
+}: SeminalDatePickerProps) => {
   const dropdownRef = useRef(null);
   const [dropdownOpened, setSDropdownOpened] = useState(false);
   const inputClasses = classNames('seminal-textinput');
@@ -177,7 +177,7 @@ const DatePicker = ({
       let html = '<div class="ui-datepicker-header">' +
                       '<a href="#" class="ui-datepicker-btn ui-datepicker-prev-btn">&lt;</a>' +
                       '<a href="#" class="ui-datepicker-btn ui-datepicker-next-btn">&gt;</a>' +
-                      '<span class="datepicker-curr-month">'+monthData.year+'-'+monthData.month+'</span>' +
+                      '<div><a href="#" class="ui-datepicker-btn ui-datepicker-prev-year-btn">&lt;</a><a href="#" class="ui-datepicker-btn ui-datepicker-next-year-btn">&gt;</a><span class="datepicker-curr-month">'+monthData.year+'-'+monthData.month+'</span></div>' +
                   '</div>' +
                   '<div class="ui-datepicker-body">' +
                       '<table>' +
@@ -210,7 +210,7 @@ const DatePicker = ({
       return html;
     };
 
-    datepicker.render = function(direction: any) {
+    datepicker.render = function(direction: any, yearDirection?: boolean) {
       let year;
       let month;
       if (monthData) {
@@ -218,7 +218,14 @@ const DatePicker = ({
         month = monthData.month;
       }
 
-      if (direction === 'prev') {
+      if (direction === 'prev' && yearDirection) {
+        year--;
+        month = 1;
+      } else if (direction === 'next' && yearDirection) {
+        year++;
+        month = 1;
+      }
+      if (direction === 'prev' && !yearDirection) {
         if (month === 1) {
           year --;
           month = 12;
@@ -226,7 +233,7 @@ const DatePicker = ({
           month--;
         }
       };
-      if (direction === 'next') month++;
+      if (direction === 'next' && !yearDirection) month++;
 
       const html = datepicker.buildUi(year, month);
 
@@ -272,6 +279,10 @@ const DatePicker = ({
           datepicker.render('prev');
         } else if ($target.classList.contains('ui-datepicker-next-btn')) {
           datepicker.render('next');
+        } else if ($target.classList.contains('ui-datepicker-prev-year-btn')) {
+          datepicker.render('prev', true);
+        } else if ($target.classList.contains('ui-datepicker-next-year-btn')) {
+          datepicker.render('next', true);
         }
       }, false);
 
@@ -336,4 +347,4 @@ const DatePicker = ({
   );
 };
 
-export default DatePicker;
+export default SeminalDatePicker;
