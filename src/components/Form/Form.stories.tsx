@@ -24,17 +24,14 @@ export default meta;
 export const BasicForm = () => {
   return (
     <Form>
-      <FormItem label="username">
+      <FormItem label="username" name="username">
         <Input />
       </FormItem>
-      <FormItem label="password">
+      <FormItem label="password"  name="password">
         <Input type='password' />
       </FormItem>
-      <FormItem>
-        <Input placeholder='no-label' />
-      </FormItem>
       <div className="agreement-section" style={{display: 'flex'}}>
-        <FormItem>
+        <FormItem  name="agreement">
           <input type='checkbox' />
         </FormItem>
         <span className="agree-text">click means u agree<a href='#'>user agreement</a></span>
