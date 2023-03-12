@@ -23,7 +23,7 @@ export default meta;
 
 export const BasicForm = () => {
   return (
-    <Form>
+    <Form initialValues={{username: 'Mirage', agreement: true}}>
       <FormItem label="username" name="username">
         <Input />
       </FormItem>

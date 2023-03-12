@@ -24,11 +24,12 @@ const FormItem: React.FC<FormItemProps> = (props) => {
     'viking-row-no-label': !label
   });
 
-  const {dispatch, fields} = useContext(FormContext);
+  const {dispatch, fields, initialValues} = useContext(FormContext);
 
   useEffect(() => {
+    const value = (initialValues && initialValues[name]) || '';
     // 为本组件注册到store里：
-    dispatch({type: 'addField', name, value: {label, name, value: ''}})
+    dispatch({type: 'addField', name, value: {label, name, value}})
   }, []);
 
   const fieldState = fields[name];
