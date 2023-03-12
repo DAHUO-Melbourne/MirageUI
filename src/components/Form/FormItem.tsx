@@ -6,10 +6,20 @@ export interface FormItemProps {
   label?: string,
   children?: React.ReactNode,
   name: string,
+  valuePropName?: string,
+  trigger?: string,
+  getValueFromEvent?: (event: any) => any,
 }
 
 const FormItem: React.FC<FormItemProps> = (props) => {
-  const {label, children, name} = props;
+  const {
+    label,
+    children,
+    name,
+    valuePropName,
+    trigger,
+    getValueFromEvent,
+  } = props;
   const rowClass = classNames('mirage-row', {
     'viking-row-no-label': !label
   });
@@ -25,20 +35,32 @@ const FormItem: React.FC<FormItemProps> = (props) => {
   const value = fieldState && fieldState.value;
 
   const onValueUpdate = (e: any) => {
-    const value = e.target.value;
+    const value = getValueFromEvent && getValueFromEvent(e);
     console.log('new value', value);
     dispatch({type: 'updateField', name, value});
   }
 
   const controlProps: Record<string, any> = {}
-  controlProps.value = value;
-  controlProps.onChange = onValueUpdate;  
+  controlProps[valuePropName!] = value;
+  // valuePropName!这种写法是判断非空
+  controlProps[trigger!] = onValueUpdate;  
   /**
    * 使用这种写法可以做出一个props的object
    */
 
   const childList = React.Children.toArray(children);
+  if (childList.length === 0) {
+    console.error('no child element is provided');
+  }
   // 将children转化为一个array
+
+  if (!React.isValidElement(childList[0])) {
+    console.error('child component is not a valid component');
+  }
+  
+  if (childList.length > 1) {
+    console.warn('more than one child element r provided');
+  }
   const child = childList[0] as React.ReactElement;
 
   const returnedChildNode = React.cloneElement(child, {
@@ -61,6 +83,12 @@ const FormItem: React.FC<FormItemProps> = (props) => {
       </div>
     </div>
   )
+}
+
+FormItem.defaultProps = {
+  valuePropName: 'value',
+  trigger: 'onChange',
+  getValueFromEvent: (e) => e.target.value,
 }
 
 export default FormItem;

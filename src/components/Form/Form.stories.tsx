@@ -31,7 +31,7 @@ export const BasicForm = () => {
         <Input type='password' />
       </FormItem>
       <div className="agreement-section" style={{display: 'flex'}}>
-        <FormItem  name="agreement">
+        <FormItem  name="agreement" valuePropName="checked" getValueFromEvent={(e) => e.target.checked}>
           <input type='checkbox' />
         </FormItem>
         <span className="agree-text">click means u agree<a href='#'>user agreement</a></span>
