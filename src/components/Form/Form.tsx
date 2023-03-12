@@ -1,7 +1,7 @@
 import React, {createContext, ReactNode} from 'react'
 import useStore from './useStore';
 
-export type IFormContext = Pick<ReturnType<typeof useStore>, 'dispatch'>
+export type IFormContext = Pick<ReturnType<typeof useStore>, 'dispatch' | 'fields'>
 // 这里又是一个ts的高级用法：
 /**
  * 1. ReturnType可以自动拿到泛型里的类型，也就是使用<typeof XXX>来拿到对应的类型
@@ -26,7 +26,8 @@ const Form: React.FC<FormProps> = (props) => {
   const {form, fields, dispatch} = useStore();
   
   const passedContext: IFormContext = {
-    dispatch
+    dispatch,
+    fields
   }
   // 这是要传递的context的值
 
