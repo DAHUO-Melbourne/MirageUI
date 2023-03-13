@@ -1,7 +1,16 @@
 import React, {useContext, useEffect} from 'react';
 import classNames from 'classnames';
 import {FormContext} from './Form';
-
+export type SomeRequired<T, K extends keyof T> = Required<Pick<T, K>> & Omit<T, K>;
+/**
+ * 使用Required来设置从类型T里pick出来的Key值K必须是required必选的
+ * 写法就是如上所示：SomeRequired, T是总的type，而K指的是key，写法就是K extends keyof T
+ * 有了extends keyof T就是相当于告诉app只能从T的key list里进行选择
+ * Required指的是这些选出来的type值是必选的，不能是？可选的
+ * Omit意思就是从T里排除K这些key
+ * 如上这一行的意思就是：从type T里选出K这些type，并且设置成Required，而Type T里其他的key也要被合并进去只是不需要被设置成required了，保持原有的设置即可。
+ */
+type TestType = SomeRequired<FormItemProps, 'getValueFromEvent'>
 export interface FormItemProps {
   label?: string,
   children?: React.ReactNode,
@@ -19,7 +28,8 @@ const FormItem: React.FC<FormItemProps> = (props) => {
     valuePropName,
     trigger,
     getValueFromEvent,
-  } = props;
+  } = props as SomeRequired<FormItemProps, 'getValueFromEvent' | 'trigger' | 'valuePropName'>;
+
   const rowClass = classNames('mirage-row', {
     'viking-row-no-label': !label
   });
@@ -36,15 +46,15 @@ const FormItem: React.FC<FormItemProps> = (props) => {
   const value = fieldState && fieldState.value;
 
   const onValueUpdate = (e: any) => {
-    const value = getValueFromEvent && getValueFromEvent(e);
+    const value = getValueFromEvent(e);
     console.log('new value', value);
     dispatch({type: 'updateField', name, value});
   }
 
   const controlProps: Record<string, any> = {}
-  controlProps[valuePropName!] = value;
+  controlProps[valuePropName] = value;
   // valuePropName!这种写法是判断非空
-  controlProps[trigger!] = onValueUpdate;  
+  controlProps[trigger] = onValueUpdate;  
   /**
    * 使用这种写法可以做出一个props的object
    */
