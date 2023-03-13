@@ -50,6 +50,19 @@ const FormItem: React.FC<FormItemProps> = (props) => {
 
   const fieldState = fields[name];
   const value = fieldState && fieldState.value;
+  const errors = fieldState && fieldState.errors;
+  // 获取是否有errors
+  const isRequired = rules?.some(rule => rule.required);
+  // 判断这一个item是否是required必须的
+  const hasError = errors && errors.length > 0;
+  // 当errors多于一个就意味着有error
+  const labelClass = classNames({
+    'mirage-form-item-required': isRequired
+  })
+
+  const itemClass = classNames({
+    'mirage-form-item-has-error': hasError
+  })
 
   const onValueUpdate = (e: any) => {
     const value = getValueFromEvent(e);
@@ -97,13 +110,20 @@ const FormItem: React.FC<FormItemProps> = (props) => {
     <div className={rowClass}>
       {label && (
         <div className='mirage-form-item-label'>
-          <label title={label}>
+          <label title={label} className={labelClass}>
             {label}
           </label>
         </div>
       )}
       <div className='mirage-form-item'>
-        {returnedChildNode}
+        <div className={itemClass}>
+          {returnedChildNode}
+        </div>
+        {hasError && (
+          <div className='mirage-form-item-explain'>
+            <span>{errors[0].message}</span>
+          </div>
+        )}
       </div>
     </div>
   )
