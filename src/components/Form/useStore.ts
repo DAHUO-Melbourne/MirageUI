@@ -1,11 +1,13 @@
 import { useState, useReducer } from "react";
 // 单个item的信息
+import Schema, {RuleItem, ValidateError} from "async-validator";
+
 export interface FieldDetailsProps {
   name: string;
   value: string;
-  rules: any[];
+  rules: RuleItem[];
   isValid: boolean;
-  errors: any[];
+  errors: ValidateError[];
 }
 
 // 整个store的信息是由一堆FieldDetailsProps组成的，而FieldsState就相当于是存储store信息的地方
@@ -18,7 +20,7 @@ export interface FormState {
 }
 
 export interface FieldsActionProps {
-  type: 'addField' | 'updateField';
+  type: 'addField' | 'updateField' | 'updateValidateResult';
   name: string;
   value: any;
 }
@@ -40,6 +42,12 @@ function fieldsReducer(state: FieldsState, action: FieldsActionProps): FieldsSta
         [action.name]: {...state[action.name], value: action.value}
         // 以name作为key，以value作为value
       }
+    case 'updateValidateResult':
+      const {isValid, errors} = action.value;
+      return {
+        ...state,
+        [action.name]: {...state[action.name], isValid, errors}
+      }
     default:
       return state;
   }
@@ -57,10 +65,37 @@ const useStore = () => {
    * 组件可以通过使用state.xxx来拿到不同的state值
    * dispatch是暴露出来的更新函数
    */
+
+  const validateField = async (name: string) => {
+    const {value, rules} = fields[name];
+    const descriptor = {
+      [name]: rules
+    }
+    const valueMap = {
+      [name]: value
+    }
+    const validator = new Schema(descriptor);
+    let isValid = true;
+    let errors: ValidateError[] = [];
+    try {
+      await validator.validate(valueMap);
+    } catch(e) {
+      isValid = false;
+      const err = e as any;
+      console.log('e', err.errors);
+      console.log('fields', err.fields);
+      errors = err.errors;
+    } finally {
+      console.log('errors', isValid);
+      dispatch({type: 'updateValidateResult', name, value: {isValid, errors}});
+    }
+  }
+
   return {
     fields,
     dispatch,
     form,
+    validateField,
   }
 }
 

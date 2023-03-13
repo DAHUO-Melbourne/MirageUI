@@ -24,10 +24,10 @@ export default meta;
 export const BasicForm = () => {
   return (
     <Form initialValues={{username: 'Mirage', agreement: true}}>
-      <FormItem label="username" name="username">
+      <FormItem label="username" name="username" rules={[{type: 'email', required: true}]}>
         <Input />
       </FormItem>
-      <FormItem label="password"  name="password">
+      <FormItem label="password"  name="password" rules={[{type: 'string', required: true, min: 3, max: 8}]}>
         <Input type='password' />
       </FormItem>
       <div className="agreement-section" style={{display: 'flex'}}>
@@ -42,3 +42,7 @@ export const BasicForm = () => {
     </Form>
   )
 }
+/**
+ * rules={
+ * 就是使用validate这个包里面提供的规则。这是固定写法
+ */

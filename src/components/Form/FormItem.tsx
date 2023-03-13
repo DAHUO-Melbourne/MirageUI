@@ -1,5 +1,6 @@
 import React, {useContext, useEffect} from 'react';
 import classNames from 'classnames';
+import { RuleItem } from 'async-validator/dist-types/interface';
 import {FormContext} from './Form';
 export type SomeRequired<T, K extends keyof T> = Required<Pick<T, K>> & Omit<T, K>;
 /**
@@ -11,6 +12,7 @@ export type SomeRequired<T, K extends keyof T> = Required<Pick<T, K>> & Omit<T, 
  * 如上这一行的意思就是：从type T里选出K这些type，并且设置成Required，而Type T里其他的key也要被合并进去只是不需要被设置成required了，保持原有的设置即可。
  */
 type TestType = SomeRequired<FormItemProps, 'getValueFromEvent'>
+
 export interface FormItemProps {
   label?: string,
   children?: React.ReactNode,
@@ -18,6 +20,8 @@ export interface FormItemProps {
   valuePropName?: string,
   trigger?: string,
   getValueFromEvent?: (event: any) => any,
+  rules?: RuleItem[],
+  validateTrigger?: string,
 }
 
 const FormItem: React.FC<FormItemProps> = (props) => {
@@ -28,18 +32,20 @@ const FormItem: React.FC<FormItemProps> = (props) => {
     valuePropName,
     trigger,
     getValueFromEvent,
-  } = props as SomeRequired<FormItemProps, 'getValueFromEvent' | 'trigger' | 'valuePropName'>;
+    rules,
+    validateTrigger,
+  } = props as SomeRequired<FormItemProps, 'getValueFromEvent' | 'trigger' | 'valuePropName' | 'validateTrigger'>;
 
   const rowClass = classNames('mirage-row', {
     'viking-row-no-label': !label
   });
 
-  const {dispatch, fields, initialValues} = useContext(FormContext);
+  const {dispatch, fields, initialValues, validateField} = useContext(FormContext);
 
   useEffect(() => {
     const value = (initialValues && initialValues[name]) || '';
     // 为本组件注册到store里：
-    dispatch({type: 'addField', name, value: {label, name, value}})
+    dispatch({type: 'addField', name, value: {label, name, value, rules, isValid: true}})
   }, []);
 
   const fieldState = fields[name];
@@ -51,6 +57,10 @@ const FormItem: React.FC<FormItemProps> = (props) => {
     dispatch({type: 'updateField', name, value});
   }
 
+  const onValueValidate = async () => {
+    await validateField(name)
+  }
+
   const controlProps: Record<string, any> = {}
   controlProps[valuePropName] = value;
   // valuePropName!这种写法是判断非空
@@ -58,6 +68,9 @@ const FormItem: React.FC<FormItemProps> = (props) => {
   /**
    * 使用这种写法可以做出一个props的object
    */
+  if(rules) {
+    controlProps[validateTrigger] = onValueValidate
+  }
 
   const childList = React.Children.toArray(children);
   if (childList.length === 0) {
@@ -100,6 +113,7 @@ FormItem.defaultProps = {
   valuePropName: 'value',
   trigger: 'onChange',
   getValueFromEvent: (e) => e.target.value,
+  validateTrigger: 'onBlur',
 }
 
 export default FormItem;
