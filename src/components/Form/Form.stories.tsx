@@ -4,6 +4,7 @@ import Form from "./Form";
 import FormItem from "./FormItem";
 import Input from "../Input/Input";
 import Button from "../Button/button";
+import { CustomRule } from "./useStore";
 
 const meta: ComponentMeta<typeof Form> = {
   title: 'Form component',
@@ -21,6 +22,18 @@ const meta: ComponentMeta<typeof Form> = {
 
 export default meta;
 
+const confirmRules: CustomRule[] = [
+  {type: 'string', required: true, min: 3, max: 8},
+  ({ getFieldValue }) => ({
+    asyncValidator(rule, value) {
+      if(value !== getFieldValue('password')) {
+        return Promise.reject('two passwords do not match each other');
+      }
+      return Promise.resolve();
+    },
+  })
+]
+
 export const BasicForm = () => {
   return (
     <Form initialValues={{username: 'Mirage', agreement: true}}>
@@ -28,6 +41,9 @@ export const BasicForm = () => {
         <Input />
       </FormItem>
       <FormItem label="password"  name="password" rules={[{type: 'string', required: true, min: 3, max: 8}]}>
+        <Input type='password' />
+      </FormItem>
+      <FormItem label="password"  name="confirmpwd" rules={confirmRules}>
         <Input type='password' />
       </FormItem>
       <div className="agreement-section" style={{display: 'flex'}}>

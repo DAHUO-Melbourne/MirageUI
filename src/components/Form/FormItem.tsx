@@ -2,6 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import classNames from 'classnames';
 import { RuleItem } from 'async-validator/dist-types/interface';
 import {FormContext} from './Form';
+import { CustomRule } from './useStore';
 export type SomeRequired<T, K extends keyof T> = Required<Pick<T, K>> & Omit<T, K>;
 /**
  * 使用Required来设置从类型T里pick出来的Key值K必须是required必选的
@@ -20,7 +21,7 @@ export interface FormItemProps {
   valuePropName?: string,
   trigger?: string,
   getValueFromEvent?: (event: any) => any,
-  rules?: RuleItem[],
+  rules?: CustomRule[],
   validateTrigger?: string,
 }
 
@@ -52,7 +53,7 @@ const FormItem: React.FC<FormItemProps> = (props) => {
   const value = fieldState && fieldState.value;
   const errors = fieldState && fieldState.errors;
   // 获取是否有errors
-  const isRequired = rules?.some(rule => rule.required);
+  const isRequired = rules?.some(rule => (typeof rule !== 'function') && rule.required);
   // 判断这一个item是否是required必须的
   const hasError = errors && errors.length > 0;
   // 当errors多于一个就意味着有error

@@ -2,10 +2,14 @@ import { useState, useReducer } from "react";
 // 单个item的信息
 import Schema, {RuleItem, ValidateError} from "async-validator";
 
+export type CustomRuleFunc = ({getFieldValue}: any) => RuleItem;
+
+export type CustomRule = RuleItem | CustomRuleFunc;
+
 export interface FieldDetailsProps {
   name: string;
   value: string;
-  rules: RuleItem[];
+  rules: CustomRule[];
   isValid: boolean;
   errors: ValidateError[];
 }
@@ -66,10 +70,26 @@ const useStore = () => {
    * dispatch是暴露出来的更新函数
    */
 
+  const getFieldValue = (key: string) => {
+    return fields[key] && fields[key].value;
+  }
+
+  const transformRules = (rules: CustomRule[]) => {
+    return rules.map(rule => {
+      if(typeof rule === 'function') {
+        const calledRule = rule({getFieldValue})
+        return calledRule
+      } else {
+        return rule
+      }
+    })
+  }
+
   const validateField = async (name: string) => {
     const {value, rules} = fields[name];
+    const afterRules = transformRules(rules);
     const descriptor = {
-      [name]: rules
+      [name]: afterRules
     }
     const valueMap = {
       [name]: value
@@ -96,6 +116,7 @@ const useStore = () => {
     dispatch,
     form,
     validateField,
+    getFieldValue,
   }
 }
 
