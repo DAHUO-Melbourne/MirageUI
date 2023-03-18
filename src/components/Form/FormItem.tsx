@@ -46,7 +46,7 @@ const FormItem: React.FC<FormItemProps> = (props) => {
   useEffect(() => {
     const value = (initialValues && initialValues[name]) || '';
     // 为本组件注册到store里：
-    dispatch({type: 'addField', name, value: {label, name, value, rules, isValid: true}})
+    dispatch({type: 'addField', name, value: {label, name, value, rules: rules ?? [], errors: [], isValid: true}})
   }, []);
 
   const fieldState = fields[name];

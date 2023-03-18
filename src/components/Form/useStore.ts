@@ -1,6 +1,7 @@
 import { useState, useReducer } from "react";
 // 单个item的信息
 import Schema, {RuleItem, ValidateError} from "async-validator";
+import { mapValues, each } from "lodash";
 
 export type CustomRuleFunc = ({getFieldValue}: any) => RuleItem;
 
@@ -21,6 +22,13 @@ export interface FieldsState {
 
 export interface FormState {
   isValid: boolean;
+  isSubmitting: boolean;
+  errors: Record<string, ValidateError[]>
+}
+
+export interface ValidateErrorType extends Error {
+  errors: ValidateError[];
+  fields: Record<string, ValidateError[]>;
 }
 
 export interface FieldsActionProps {
@@ -58,7 +66,7 @@ function fieldsReducer(state: FieldsState, action: FieldsActionProps): FieldsSta
 }
 
 const useStore = () => {
-  const [form, setForm] = useState<FormState>({isValid: true});
+  const [form, setForm] = useState<FormState>({isValid: true, isSubmitting: false, errors:{}});
   const [fields, dispatch] = useReducer(fieldsReducer, {});
   /**
    * useReducer的用法：
@@ -108,6 +116,42 @@ const useStore = () => {
     } finally {
       console.log('errors', isValid);
       dispatch({type: 'updateValidateResult', name, value: {isValid, errors}});
+    }
+  }
+
+  const validateAllField = async () => {
+    let isValid = true;
+    let errors: Record<string, ValidateError[]> = {};
+    const valueMap = mapValues(fields, item => item.value);
+    // lodash的作用就是从object中，分离出key value pair，如果value是一个object，那么可以将object里的某一项拿出来赋值给key
+    // 第一个参数是object数组源，第二个是每一项提取出的key
+    const descriptor = mapValues(fields, item => transformRules(item.rules));
+    const validator = new Schema(descriptor);
+    setForm({
+      ...form,
+      isSubmitting: true,
+    });
+    try {
+      await validator.validate(valueMap);
+    } catch(e) {
+      isValid = false;
+      const err = e as ValidateErrorType;
+      errors = err.fields;
+      each(fields, (value, name) => {
+        if (errors[name]) {
+          const itemErrors = errors[name];
+          dispatch({type:'updateValidateResult', name, value: {isValid: false, errors: itemErrors}})
+        } else if(value.rules.length > 0 && !errors[name]) {
+          dispatch({type:'updateValidateResult', name, value: {isValid: true, errors: []}})
+        }
+      })
+    } finally {
+      setForm({...form, isSubmitting: false, isValid, errors})
+      return {
+        isValid,
+        errors,
+        values: valueMap
+      }
     }
   }
 
