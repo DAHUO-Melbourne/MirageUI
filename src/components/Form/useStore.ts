@@ -161,6 +161,7 @@ const useStore = () => {
     form,
     validateField,
     getFieldValue,
+    validateAllField,
   }
 }
 

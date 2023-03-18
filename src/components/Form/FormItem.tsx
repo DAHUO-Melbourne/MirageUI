@@ -38,7 +38,7 @@ const FormItem: React.FC<FormItemProps> = (props) => {
   } = props as SomeRequired<FormItemProps, 'getValueFromEvent' | 'trigger' | 'valuePropName' | 'validateTrigger'>;
 
   const rowClass = classNames('mirage-row', {
-    'viking-row-no-label': !label
+    'mirage-row-no-label': !label
   });
 
   const {dispatch, fields, initialValues, validateField} = useContext(FormContext);

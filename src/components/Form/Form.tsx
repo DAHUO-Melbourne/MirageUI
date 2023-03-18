@@ -1,3 +1,4 @@
+import { ValidateError } from 'async-validator';
 import React, {createContext, ReactNode} from 'react'
 import useStore from './useStore';
 
@@ -20,11 +21,13 @@ interface FormProps {
   name?: string;
   children?: ReactNode;
   initialValues?: Record<string, any>;
+  onFinish?: (values: Record<string, any>) => void;
+  onFinishFailed?: (values: Record<string, any>, errors: Record<string, ValidateError[]>) => void;
 }
 
 const Form: React.FC<FormProps> = (props) => {
-  const {name, children, initialValues} = props;
-  const {form, fields, dispatch, validateField} = useStore();
+  const {name, children, initialValues, onFinish, onFinishFailed} = props;
+  const {form, fields, dispatch, validateField, validateAllField} = useStore();
   
   const passedContext: IFormContext = {
     dispatch,
@@ -34,9 +37,20 @@ const Form: React.FC<FormProps> = (props) => {
   }
   // 这是要传递的context的值
 
+  const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const {isValid, errors, values} = await validateAllField();
+    if (isValid && onFinish) {
+      onFinish(values);
+    } else if (!isValid && onFinishFailed) {
+      onFinishFailed(values, errors);
+    }
+  }
+
   return (
     <>
-      <form name={name} className='mirage-form'>
+      <form name={name} className='mirage-form' onSubmit={submitForm}>
         <FormContext.Provider value={passedContext}>
           {children}
         </FormContext.Provider>

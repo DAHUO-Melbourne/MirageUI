@@ -34,9 +34,9 @@ const confirmRules: CustomRule[] = [
   })
 ]
 
-export const BasicForm = () => {
+export const BasicForm = (args: any) => {
   return (
-    <Form initialValues={{username: 'Mirage', agreement: true}}>
+    <Form initialValues={{username: 'Mirage', agreement: false}} {...args}>
       <FormItem label="username" name="username" rules={[{type: 'email', required: true}]}>
         <Input />
       </FormItem>
@@ -46,8 +46,16 @@ export const BasicForm = () => {
       <FormItem label="password"  name="confirmpwd" rules={confirmRules}>
         <Input type='password' />
       </FormItem>
-      <div className="agreement-section" style={{display: 'flex'}}>
-        <FormItem  name="agreement" valuePropName="checked" getValueFromEvent={(e) => e.target.checked}>
+      <div
+        className="agreement-section"
+        style={{display: 'flex'}}
+      >
+        <FormItem 
+          name="agreement"
+          valuePropName="checked"
+          getValueFromEvent={(e) => e.target.checked}
+          rules={[{type: 'enum', enum: [true], message: 'please agree the agreement'}]}
+        >
           <input type='checkbox' />
         </FormItem>
         <span className="agree-text">click means u agree<a href='#'>user agreement</a></span>

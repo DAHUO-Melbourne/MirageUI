@@ -30,7 +30,7 @@ const testFile = new File(['xyz'], 'test.png', {type: 'image/png'});
 
 const setUp = () => {
   render(<Upload {...testProps}>Click to upload</Upload>);
-  fileInput = screen.getByTestId('viking-file-input');
+  fileInput = screen.getByTestId('mirage-file-input');
   // uploadArea = screen.queryByText('Click to upload');
 }
 
