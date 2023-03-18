@@ -37,32 +37,36 @@ const confirmRules: CustomRule[] = [
 export const BasicForm = (args: any) => {
   return (
     <Form initialValues={{username: 'Mirage', agreement: false}} {...args}>
-      <FormItem label="username" name="username" rules={[{type: 'email', required: true}]}>
-        <Input />
-      </FormItem>
-      <FormItem label="password"  name="password" rules={[{type: 'string', required: true, min: 3, max: 8}]}>
-        <Input type='password' />
-      </FormItem>
-      <FormItem label="password"  name="confirmpwd" rules={confirmRules}>
-        <Input type='password' />
-      </FormItem>
-      <div
-        className="agreement-section"
-        style={{display: 'flex'}}
-      >
-        <FormItem 
-          name="agreement"
-          valuePropName="checked"
-          getValueFromEvent={(e) => e.target.checked}
-          rules={[{type: 'enum', enum: [true], message: 'please agree the agreement'}]}
-        >
-          <input type='checkbox' />
-        </FormItem>
-        <span className="agree-text">click means u agree<a href='#'>user agreement</a></span>
-      </div>
-      <div className="mirage-form-submit-area">
-        <Button type="submit" btnType="primary">Login</Button>
-      </div>
+      {({isValid, isSubmitting}) => (
+        <>
+          <FormItem label="username" name="username" rules={[{type: 'email', required: true}]}>
+            <Input />
+          </FormItem>
+          <FormItem label="password"  name="password" rules={[{type: 'string', required: true, min: 3, max: 8}]}>
+            <Input type='password' />
+          </FormItem>
+          <FormItem label="password"  name="confirmpwd" rules={confirmRules}>
+            <Input type='password' />
+          </FormItem>
+          <div
+            className="agreement-section"
+            style={{display: 'flex'}}
+          >
+            <FormItem 
+              name="agreement"
+              valuePropName="checked"
+              getValueFromEvent={(e) => e.target.checked}
+              rules={[{type: 'enum', enum: [true], message: 'please agree the agreement'}]}
+            >
+              <input type='checkbox' />
+            </FormItem>
+            <span className="agree-text">click means u agree<a href='#'>user agreement</a></span>
+          </div>
+          <div className="mirage-form-submit-area">
+            <Button type="submit" btnType="primary">Login {isSubmitting ? 'verifying' : 'verification passed'} {isValid ? 'pass' : 'not passed'}</Button>
+          </div>
+        </>
+      )}
     </Form>
   )
 }

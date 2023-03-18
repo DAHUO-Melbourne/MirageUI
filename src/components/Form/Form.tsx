@@ -1,6 +1,13 @@
 import { ValidateError } from 'async-validator';
 import React, {createContext, ReactNode} from 'react'
-import useStore from './useStore';
+import useStore, {FormState} from './useStore';
+export type RenderProps = (form: FormState) => ReactNode;
+/**
+ * renderProps的意思就是根据传入的参数不同，render出模板大致一样，但是具体的值不一样的dom
+ * 说白了就是根据不同的参数的值渲染出不同的UI结果
+ * renderProps的类型必须是一个函数，参数是需要渲染的数据，返回的是一个react节点。
+ * 好处是可以复用代码
+ */
 
 export type IFormContext = Pick<ReturnType<typeof useStore>, 'dispatch' | 'fields' | 'validateField'> & Pick<FormProps, 'initialValues'>
 // 这里又是一个ts的高级用法：
@@ -19,7 +26,7 @@ export const FormContext = createContext<IFormContext>(
 
 interface FormProps {
   name?: string;
-  children?: ReactNode;
+  children?: ReactNode | RenderProps;
   initialValues?: Record<string, any>;
   onFinish?: (values: Record<string, any>) => void;
   onFinishFailed?: (values: Record<string, any>, errors: Record<string, ValidateError[]>) => void;
@@ -48,11 +55,18 @@ const Form: React.FC<FormProps> = (props) => {
     }
   }
 
+  let childrenNode;
+  if (typeof(children) === 'function') {
+    childrenNode = children(form)
+  } else {
+    childrenNode = children;
+  }
+
   return (
     <>
       <form name={name} className='mirage-form' onSubmit={submitForm}>
         <FormContext.Provider value={passedContext}>
-          {children}
+          {childrenNode}
         </FormContext.Provider>
         {/**
          * 使用context就是当我们不清楚children里面都有什么样的元素的时候才使用context来传值
