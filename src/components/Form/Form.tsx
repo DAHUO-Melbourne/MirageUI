@@ -34,7 +34,7 @@ interface FormProps {
 
 const Form: React.FC<FormProps> = (props) => {
   const {name, children, initialValues, onFinish, onFinishFailed} = props;
-  const {form, fields, dispatch, validateField, validateAllField} = useStore();
+  const {form, fields, dispatch, validateField, validateAllField} = useStore(initialValues);
   
   const passedContext: IFormContext = {
     dispatch,
