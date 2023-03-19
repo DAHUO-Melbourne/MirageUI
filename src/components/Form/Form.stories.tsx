@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import { ComponentMeta } from "@storybook/react";
-import Form from "./Form";
+import Form, {IFormRef} from "./Form";
 import FormItem from "./FormItem";
 import Input from "../Input/Input";
 import Button from "../Button/button";
@@ -35,8 +35,14 @@ const confirmRules: CustomRule[] = [
 ]
 
 export const BasicForm = (args: any) => {
+  const ref = useRef<IFormRef>()
+  const resetAll = () => {
+    console.log('get value', ref.current?.getFieldValue('username'))
+    ref.current?.resetFields();
+    // 这个resetFields和getFieldValue就是我们人为添加进useImperativeHandle的回调函数中暴露出来的
+  }
   return (
-    <Form initialValues={{username: 'Mirage', agreement: false}} {...args}>
+    <Form initialValues={{username: 'Mirage', agreement: false}} {...args} ref={ref}>
       {({isValid, isSubmitting}) => (
         <>
           <FormItem label="username" name="username" rules={[{type: 'email', required: true}]}>
@@ -64,6 +70,13 @@ export const BasicForm = (args: any) => {
           </div>
           <div className="mirage-form-submit-area">
             <Button type="submit" btnType="primary">Login {isSubmitting ? 'verifying' : 'verification passed'} {isValid ? 'pass' : 'not passed'}</Button>
+            <Button
+              type="button"
+              btnType="primary"
+              onClick={resetAll}
+            >
+              打印ref
+            </Button>
           </div>
         </>
       )}

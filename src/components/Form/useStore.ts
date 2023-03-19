@@ -92,7 +92,7 @@ const useStore = (initialValues?: Record<string, any>) => {
     }
   }
 
-  const resetFields = (name: string, value: any) => {
+  const resetFields = () => {
     if (initialValues){
       each(initialValues, (value, name) => {
         if (fields[name]) {
