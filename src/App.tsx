@@ -197,3 +197,11 @@ export default App;
  * 4. 当onBlur的时候可以通过key+ value以及rules来更新数据，这个rules是在添加组件的时候随着key value一起添加进store的
  * 例如： 'username': {name: 'username', value: '', rules: [], isValid: true}
  */
+
+/**
+ * 12-1
+ * 1. 介绍js打包历史：
+ *    commonjs的打包语法是通过require()来引入包，通过module.exports = function() {}来导出包，导出内容
+ *    但是这一种方法更接近于服务器端
+ * 2. es6模块的语法是：import来引入，export default来导出
+ */
