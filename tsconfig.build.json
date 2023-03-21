@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "build",
+    // 这个字段是描述转译以后的文件输出结果放在哪个文件夹底下。我们叫他build文件夹
+    "module": "ESNext",
+    // 设定输出后模块的类型。我们是ES6写法，也就是ESNext
+    "target": "ES5",
+    // ES3可以让支持的浏览器更广泛
+    "declaration": true,
+    // 为每个ts文件都生成一个.d.ts文件，作用是让开发人员在使用我们的组件库的时候能直接方便地拿到该组件的ts类型
+    "jsx": "react",
+  },
+  "include": [
+    "src"
+  ],
+  // 编译src文件夹下面的全部文件
+  "exclude": [
+    "src/**/*.test.tsx",
+    "src/**/*.stories.tsx",
+  ]
+  // 不需要编译所有的test文件和所有的stories文件
+  // 两个星号代表任意长度
+}
