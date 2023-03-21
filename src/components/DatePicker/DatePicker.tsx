@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect} from 'react';
 import classNames from 'classnames';
 
-interface SeminalDatePickerProps {
+interface DatePickerProps {
   onSelect: (p: string) => void;
   title: string;
   required?: boolean;
@@ -9,16 +9,16 @@ interface SeminalDatePickerProps {
   placeholder?: string;
 }
 
-const SeminalDatePicker = ({
+const DatePicker = ({
   onSelect,
   title,
   required,
   selectedDate,
   placeholder = 'yyyy-mm-dd',
-}: SeminalDatePickerProps) => {
+}: DatePickerProps) => {
   const dropdownRef = useRef(null);
   const [dropdownOpened, setSDropdownOpened] = useState(false);
-  const inputClasses = classNames('seminal-textinput');
+  const inputClasses = classNames('mintafy-textinput');
   const inputRef = useRef<HTMLInputElement>(null);
   const [currentYear, setCurrentYear] = useState((new Date).getFullYear());
   const [currentMonth, setCurrentMonth] = useState((new Date).getMonth() + 1);
@@ -322,7 +322,7 @@ const SeminalDatePicker = ({
       return;
     }
     const datePicker = renderDatePicker();
-    datePicker.init('.seminal-textinput');
+    datePicker.init('.mintafy-textinput');
   }, [dropdownOpened]);
 
   return (
@@ -347,4 +347,4 @@ const SeminalDatePicker = ({
   );
 };
 
-export default SeminalDatePicker;
+export default DatePicker;
