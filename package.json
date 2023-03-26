@@ -1,7 +1,8 @@
 {
   "name": "mirage",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "description": "react component library",
   "main": "build/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
