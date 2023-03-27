@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "build",
+    "outDir": "dist",
     // 这个字段是描述转译以后的文件输出结果放在哪个文件夹底下。我们叫他build文件夹
     "module": "esnext",
     // 设定输出后模块的类型。我们是ES6写法，也就是ESNext
