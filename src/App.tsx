@@ -230,3 +230,14 @@ export default App;
  * 改好了以后再修改版本号，重新发布。发布了以后重新npm i来重新安装
  * 2. 也可以将测试app连接你本地的组件库包里，使用npm link，这样就不需要先发布再使用了
  */
+
+/**
+ * 13-4
+ * "lint": "eslint --est js,ts,tsx src",
+ * 的含义是： 检测src文件夹下面的js ts和tsx文件
+ * "lint": "eslint --est js,ts,tsx src --max-warnings 5",
+ * 的含义是： 检测src文件夹下面的js ts和tsx文件，但是最多只能有5个warnings，如果超过了会报错
+ * 
+   "test:nowatch": "cross-env CI=true react-scripts test",
+ * 的含义是：测试的时候直接打印通过与否的结果，而非暴露一个watch 
+ */
