@@ -240,4 +240,9 @@ export default App;
  * 
    "test:nowatch": "cross-env CI=true react-scripts test",
  * 的含义是：测试的时候直接打印通过与否的结果，而非暴露一个watch 
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test:nowatch && npm run lint"
+    }
+  },
  */
