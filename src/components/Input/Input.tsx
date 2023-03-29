@@ -1,6 +1,6 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import classNames from 'classnames';
-import React, { ReactElement, InputHTMLAttributes, ChangeEvent } from 'react';
+import React, { ReactElement, InputHTMLAttributes, ChangeEvent, forwardRef } from 'react';
 import Icon from '../Icon/Icon';
 
 type InputSize = 'lg' | 'sm';
@@ -31,7 +31,7 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLElement>, 'size
  * 支持 HTMLInput 的所有基本属性
  */
 
-export const Input: React.FC<InputProps> = ({
+export const Input = forwardRef<HTMLInputElement, InputProps>(({
   disabled,
   size,
   icon,
@@ -41,7 +41,7 @@ export const Input: React.FC<InputProps> = ({
   value,
   onChange,
   ...restProps
-}: InputProps) => {
+}, ref) => {
 
   const className = classNames('mirage-input-wrapper', {
     [`input-size-${size}`]: size,
@@ -80,6 +80,6 @@ export const Input: React.FC<InputProps> = ({
       {append && <div className="mirage-input-group-append">{append}</div>}
     </div>
   )
-}
+})
 
 export default Input;
